@@ -1,0 +1,137 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../signup/presentation/widget/text_form_field.dart';
+import '../widgets/message_box.dart';
+
+class ConversationScreen extends StatefulWidget {
+  const ConversationScreen({super.key});
+
+  @override
+  State<ConversationScreen> createState() => _ConversationScreenState();
+}
+
+class _ConversationScreenState extends State<ConversationScreen> {
+  late bool messageType;
+
+  @override
+  void initState() {
+    messageType = false;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 10,
+        title: Text(
+          "Sajedul Islam Rakib",
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              fontSize: 20, color: Theme.of(context).colorScheme.onPrimary),
+        ),
+        actions: const [
+          Icon(FontAwesomeIcons.magnifyingGlass),
+          SizedBox(
+            width: 20,
+          ),
+          Icon(FontAwesomeIcons.bars),
+          SizedBox(
+            width: 20,
+          )
+        ],
+      ),
+      backgroundColor:
+          isDark ? const Color(0xff152033) : const Color(0xffFFFFFF),
+      // bottomNavigationBar: const BottomAppBar(
+      //   child: InputFormField(
+      //     hintText: "Message",
+      //     suffix: Icon(CupertinoIcons.add_circled_solid),
+      //   ),
+      // ),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: 10,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    // MessageBox(
+                    //   bubbleType: BubbleType.receiverBubble,
+                    //   message: 'I am fine, what about you?',
+                    // ),
+                    // SizedBox(
+                    //   height: 10,
+                    // ),
+                    // MessageBox(
+                    //   bubbleType: BubbleType.sendBubble,
+                    //   message: 'Whar are you doin now?',
+                    // ),
+                    // SizedBox(
+                    //   height: 10,
+                    // ),
+                    MessageBox(
+                        bubbleType: BubbleType.receiverBubble,
+                        message: 'I love you'),
+                    MessageBox(
+                        bubbleType: BubbleType.sendBubble,
+                        message: 'I love you too'),
+                    // SizedBox(
+                    //   height: 10,
+                    // ),
+                    // MessageBox(
+                    //     bubbleType: BubbleType.sendBubble,
+                    //     message: 'Do something for me..'),
+                    // SizedBox(
+                    //   height: 10,
+                    // ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: InputFormField(
+                hintText: "Message",
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    setState(() {
+                      messageType = true;
+                    });
+                  } else {
+                    setState(() {
+                      messageType = false;
+                    });
+                  }
+                },
+                prefix: Icon(CupertinoIcons.mail),
+                suffix: messageType == true
+                    ? Icon(CupertinoIcons.paperplane_fill)
+                    : SizedBox(
+                        width: 100,
+                        child: Row(
+                          spacing: 10,
+                          children: [
+                            Icon(CupertinoIcons.add_circled_solid),
+                            Icon(CupertinoIcons.mic_fill),
+                            Icon(CupertinoIcons.qrcode_viewfinder)
+                          ],
+                        ),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
