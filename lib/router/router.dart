@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
 import '../features/chats/presentation/pages/chat_screen.dart';
 import '../features/contacts/presentation/pages/contact_screen.dart';
-import '../features/conversation/presentation/pages/conversation_screen.dart';
 import '../features/login/presentation/pages/login_screen.dart';
 import '../features/profile/presentation/pages/profile_screen.dart';
 import '../features/signup/presentation/pages/signup_screen.dart';
@@ -78,12 +77,14 @@ class AppRouter {
     ),
 
     //message screen
-    GoRoute(
-      path: RouteName.conversationScreen,
-      name: RouteName.conversationScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: ConversationScreen());
-      },
-    ),
+    // GoRoute(
+    //   path: RouteName.conversationScreen,
+    //   name: RouteName.conversationScreen,
+    //   pageBuilder: (context, state) {
+    //     MyUser myuser = MyUser.empty;
+    //     return const MaterialPage(
+    //         child: ConversationScreen(myuser: myuser));
+    //   },
+    // ),
   ]);
 }

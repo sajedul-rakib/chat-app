@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeShared {
@@ -10,5 +12,10 @@ class ThemeShared {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? theme = sharedPreferences.getString("mode");
     return theme;
+  }
+
+  static Stream<String?> get themeStream async* {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    yield sharedPreferences.getString("mode");
   }
 }

@@ -210,7 +210,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 fullName: state.friendList![index].fullname,
                                 imageUrl: state.friendList![index].profilePic,
                                 onPressed: () => Navigator.pushNamed(
-                                    context, RouteName.conversationScreen),
+                                    context, RouteName.conversationScreen,
+                                    arguments: state.friendList![index]),
                               );
                             },
                             separatorBuilder: (_, int index) {

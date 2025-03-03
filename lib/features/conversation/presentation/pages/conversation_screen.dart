@@ -1,3 +1,4 @@
+import 'package:chat_app/features/signup/data/models/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
@@ -7,7 +8,9 @@ import '../../../signup/presentation/widget/text_form_field.dart';
 import '../widgets/message_box.dart';
 
 class ConversationScreen extends StatefulWidget {
-  const ConversationScreen({super.key});
+  const ConversationScreen({super.key, required this.myuser});
+
+  final MyUser myuser;
 
   @override
   State<ConversationScreen> createState() => _ConversationScreenState();
@@ -28,10 +31,28 @@ class _ConversationScreenState extends State<ConversationScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
-        title: Text(
-          "Sajedul Islam Rakib",
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              fontSize: 20, color: Theme.of(context).colorScheme.onPrimary),
+        title: Row(
+          children: [
+            InkWell(
+              onTap: () {
+                //overview the friend profile
+                _showProfilePic(widget.myuser.profilePic!,
+                    widget.myuser.fullname, widget.myuser.email);
+              },
+              child: CircleAvatar(
+                // radius: 20,
+                backgroundImage: NetworkImage(widget.myuser.profilePic!),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              widget.myuser.fullname,
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  fontSize: 20, color: Theme.of(context).colorScheme.onPrimary),
+            ),
+          ],
         ),
         actions: const [
           Icon(FontAwesomeIcons.magnifyingGlass),
@@ -132,6 +153,58 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  //show the profile pic of the friend and his/her name and email
+  void _showProfilePic(String profilePicUrl, String fullName, String mail) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: 300,
+                width: 300,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  ),
+                  image: DecorationImage(
+                    image: NetworkImage(profilePicUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Text(
+                fullName,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontSize: 20,
+                    color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                mail,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

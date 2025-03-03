@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
@@ -9,6 +10,7 @@ part 'theme_event.dart';
 part 'theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
+  late StreamSubscription? _themeSubscription;
   ThemeBloc() : super(const ThemeState.system()) {
     on<InitialTheme>((event, emit) async {
       String? themeMode = await ThemeShared.getTheme();
@@ -37,5 +39,11 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
       //save the theme mode to shared preference
       ThemeShared.setThemeMode(event.themeMode);
     });
+  }
+
+  @override
+  Future<void> close() {
+    _themeSubscription?.cancel();
+    return super.close();
   }
 }

@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:chat_app/features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
 import 'package:chat_app/features/chats/domain/repositories/user_repo.dart';
 import 'package:chat_app/features/chats/presentation/bloc/bloc/get_friend_list_bloc.dart';
 import 'package:chat_app/features/conversation/presentation/pages/conversation_screen.dart';
 import 'package:chat_app/features/login/presentation/pages/login_screen.dart';
+import 'package:chat_app/features/signup/data/models/user.dart';
 import 'package:chat_app/features/signup/presentation/pages/signup_screen.dart';
 import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/router/route_name.dart';
@@ -48,6 +51,7 @@ class MainApp extends StatelessWidget {
       child: BlocBuilder<ThemeBloc, ThemeState>(
         bloc: ThemeBloc()..add(InitialTheme()),
         builder: (BuildContext context, state) {
+          log('from main app ${state.themeType}');
           return MaterialApp(
             themeMode: state.themeType == ThemeType.light
                 ? ThemeMode.light
@@ -62,8 +66,14 @@ class MainApp extends StatelessWidget {
               RouteName.bottomNavBarScreen: (BuildContext context) =>
                   BottomNavBar(),
               RouteName.signInScreen: (BuildContext context) => SigninScreen(),
-              RouteName.conversationScreen: (BuildContext context) =>
-                  ConversationScreen(),
+              RouteName.conversationScreen: (BuildContext context) {
+                final MyUser myuser =
+                    ModalRoute.of(context)!.settings.arguments as MyUser;
+
+                return ConversationScreen(
+                  myuser: myuser,
+                );
+              },
             },
             initialRoute: RouteName.initial,
             home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
