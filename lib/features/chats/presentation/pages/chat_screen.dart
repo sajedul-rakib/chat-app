@@ -26,8 +26,8 @@ class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _friendGmailETController;
   @override
   void initState() {
-    context.read<GetFriendListBloc>().add(GetFriendListRequested(
-        subscriberId: context.read<AuthenticationBloc>().state.user!.uid));
+    // context.read<GetFriendListBloc>().add(GetFriendListRequested(
+    //     subscriberId: context.read<AuthenticationBloc>().state.user!.uid));
     _friendGmailETController = TextEditingController();
     super.initState();
   }
@@ -207,7 +207,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             itemCount: state.friendList!.length,
                             itemBuilder: (_, index) {
                               return FriendListTile(
-                                fullName: state.friendList![index].fullname,
+                                fullName: state.friendList![index].fullName,
                                 imageUrl: state.friendList![index].profilePic,
                                 onPressed: () => Navigator.pushNamed(
                                     context, RouteName.conversationScreen,

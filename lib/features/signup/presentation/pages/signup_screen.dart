@@ -50,6 +50,14 @@ class _SigninScreenState extends State<SigninScreen> {
   }
 
   @override
+  void dispose() {
+    _nameETController.dispose();
+    _emailETController.dispose();
+    _passwordETController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -61,15 +69,18 @@ class _SigninScreenState extends State<SigninScreen> {
                   _emailETController.clear();
                   _passwordETController.clear();
                   _nameETController.clear();
-                  AwesomeSnackbarContent(
-                    contentType: ContentType.success,
-                    title: 'Well done!',
-                    message:
-                        'Congratulation.You are successfully create you account',
-                  );
-                  context
-                      .read<AuthenticationBloc>()
-                      .add(AuthenticationUserChanged());
+                  state.isSuccess
+                      ? AwesomeSnackbarContent(
+                          contentType: ContentType.success,
+                          title: 'Well done!',
+                          message:
+                              'Congratulation.You are successfully create you account',
+                        )
+                      : AwesomeSnackbarContent(
+                          contentType: ContentType.failure,
+                          title: 'Failure',
+                          message: 'Sorry.You are not able create you account',
+                        );
                 }
                 if (state is SignUpFailure) {
                   log(state.errorMessage);
@@ -160,7 +171,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             const SizedBox(
                               height: 20,
                             ),
-                            (state is SignUpProccess)
+                            (state is SignUpProcess)
                                 ? const Center(
                                     child: CustomCircularProgressIndicator(),
                                   )
@@ -172,17 +183,18 @@ class _SigninScreenState extends State<SigninScreen> {
                                         MyUser createUser = MyUser(
                                             email:
                                                 _emailETController.text.trim(),
-                                            fullname:
+                                            fullName:
                                                 _nameETController.text.trim(),
                                             gender: _gender);
 
                                         // log(_emailETController.text);
-                                        context.read<SignUpBloc>().add(
-                                            SignUpRequired(
-                                                user: createUser,
-                                                password:
-                                                    _passwordETController.text,
-                                                picPath: profilePic!.path));
+                                        context
+                                            .read<SignUpBloc>()
+                                            .add(SignUpRequired(
+                                              user: createUser,
+                                              password:
+                                                  _passwordETController.text,
+                                            ));
                                       }
                                     },
                                   ),

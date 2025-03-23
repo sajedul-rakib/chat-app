@@ -37,7 +37,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               onTap: () {
                 //overview the friend profile
                 _showProfilePic(widget.myuser.profilePic!,
-                    widget.myuser.fullname, widget.myuser.email);
+                    widget.myuser.fullName, widget.myuser.email);
               },
               child: CircleAvatar(
                 // radius: 20,
@@ -48,7 +48,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               width: 10,
             ),
             Text(
-              widget.myuser.fullname,
+              widget.myuser.fullName,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   fontSize: 20, color: Theme.of(context).colorScheme.onPrimary),
             ),

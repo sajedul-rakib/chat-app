@@ -7,21 +7,23 @@ import 'package:equatable/equatable.dart';
 import '../../data/models/model.dart';
 
 part 'sign_up_event.dart';
+
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   final SignupRepo _signupRepo;
+
   SignUpBloc({required SignupRepo signUpRepo})
       : _signupRepo = signUpRepo,
         super(SignUpInitial()) {
     on<SignUpRequired>((event, emit) async {
       try {
-        emit(SignUpProccess());
-        MyUser user = await _signupRepo.signUpWithEmailAndPassword(
-            user: event.user, password: event.password, picPath: event.picPath);
-        emit(SignUpSuccess(myUser: user));
+        emit(SignUpProcess());
+        bool isSuccess = await _signupRepo.signUp(
+            user: event.user, password: event.password);
+        emit(SignUpSuccess(isSuccess: isSuccess));
       } catch (e) {
-        log('from bloc : ${e.toString()}');
+        log('from sign up bloc : ${e.toString()}');
         emit(SignUpFailure(errorMessage: e.toString()));
         rethrow;
       }

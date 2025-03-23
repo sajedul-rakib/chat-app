@@ -25,14 +25,14 @@ class MainApp extends StatelessWidget {
       required SignupRepo signupRepo,
       required LoginRepo loginRepo,
       required ThemeMode themeMode,
-      required UserRepo userRepo})
+      required ChatRepo chatRepo})
       : _signupRepo = signupRepo,
         _loginRepo = loginRepo,
-        _userRepo = userRepo;
+        _chatRepo = chatRepo;
 
   final SignupRepo _signupRepo;
   final LoginRepo _loginRepo;
-  final UserRepo _userRepo;
+  final ChatRepo _chatRepo;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class MainApp extends StatelessWidget {
         RepositoryProvider<AuthenticationBloc>(
             create: (_) => AuthenticationBloc(loginRepo: _loginRepo)),
         RepositoryProvider<GetFriendListBloc>(
-            create: (_) => GetFriendListBloc(userRepo: _userRepo))
+            create: (_) => GetFriendListBloc(chatRepo: _chatRepo))
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         bloc: ThemeBloc()..add(InitialTheme()),
@@ -85,7 +85,7 @@ class MainApp extends StatelessWidget {
                       create: (_) => ThemeBloc(),
                     ),
                     BlocProvider<GetFriendListBloc>(
-                        create: (_) => GetFriendListBloc(userRepo: _userRepo)),
+                        create: (_) => GetFriendListBloc(chatRepo: _chatRepo)),
                   ],
                   child: BottomNavBar(),
                 );

@@ -9,11 +9,11 @@ sealed class SignUpState extends Equatable {
 
 final class SignUpInitial extends SignUpState {}
 
-final class SignUpProccess extends SignUpState {}
+final class SignUpProcess extends SignUpState {}
 
 final class SignUpSuccess extends SignUpState {
-  final MyUser? myUser;
-  const SignUpSuccess({this.myUser});
+  final bool isSuccess;
+  const SignUpSuccess({required this.isSuccess});
 }
 
 final class SignUpFailure extends SignUpState {

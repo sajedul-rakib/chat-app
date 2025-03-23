@@ -1,5 +1,4 @@
 import 'package:chat_app/features/login/presentation/bloc/sign_in_bloc.dart';
-import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/router/route_name.dart';
 import 'package:chat_app/theme/bloc/theme_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,14 +43,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     backgroundImage: NetworkImage('https://feji.us/m5az7q'),
                   ),
                   title: Text(
-                    "${context.read<AuthenticationBloc>().state.user!.displayName}",
+                    "Demo Name",
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!
                         .copyWith(fontWeight: FontWeight.w700),
                   ),
                   subtitle: Text(
-                    "${context.read<AuthenticationBloc>().state.user!.email}",
+                    "Demo Email",
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!

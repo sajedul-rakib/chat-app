@@ -17,7 +17,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInRequired>((event, emit) async {
       emit(SignInProccess());
       try {
-        await _loginRepo.loginWithEmailAndPassword(
+        await _loginRepo.signIn(
             email: event.email, password: event.password);
         emit(SignInSuccess());
       } catch (e) {

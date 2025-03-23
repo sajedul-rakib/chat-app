@@ -26,6 +26,10 @@ class InputFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600
+      ),
       autocorrect: autoCorrect,
       validator: (value) {
         if (validation != null) {

@@ -1,12 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class LogInRepository {
   //sign in with email and password
-  Future<void> loginWithEmailAndPassword(
+  Future<void> signIn(
       {required String email, required String password});
-  // get user data
-  Stream<User?> get user;
-
+  //check the user weather the user are logged in or not
+  Future<void> checkUserLoggedIn();
   //log out
   Future<void> logOut();
 }

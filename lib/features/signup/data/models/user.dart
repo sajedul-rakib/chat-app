@@ -1,66 +1,57 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/entities.dart';
 
 class MyUser extends Equatable {
-  final String? id;
   final String email;
-  final String fullname;
+  final String fullName;
   final String gender;
   final String? profilePic;
-  final Timestamp? lastSeen;
 
-  const MyUser(
-      {this.id,
-      required this.email,
-      required this.fullname,
-      required this.gender,
-      this.profilePic,
-      this.lastSeen});
+  const MyUser({
+    required this.email,
+    required this.fullName,
+    required this.gender,
+    this.profilePic,
+  });
 
   //empty user
   static MyUser empty =
-      const MyUser(id: '', email: '', fullname: '', gender: '', profilePic: '');
+      const MyUser(email: '', fullName: '', gender: '', profilePic: '');
 
   //copy with method
   MyUser copyWith(
-      {String? id,
-      String? email,
+      {String? email,
       String? fullname,
       String? gender,
       String? profilePic,
-      Timestamp? lastSeen}) {
+     }) {
     return MyUser(
-        id: id ?? this.id,
-        email: email ?? this.email,
-        fullname: fullname ?? this.fullname,
-        gender: gender ?? this.gender,
-        profilePic: profilePic ?? this.profilePic,
-        lastSeen: lastSeen ?? this.lastSeen);
+      email: email ?? this.email,
+      fullName: fullname ?? fullName,
+      gender: gender ?? this.gender,
+      profilePic: profilePic ?? this.profilePic,
+    );
   }
 
   UserEntites toEntity() {
     return UserEntites(
-        id: id,
-        email: email,
-        fullname: fullname,
-        gender: gender,
-        profilePic: profilePic,
-        lastSeen: lastSeen);
+      email: email,
+      fullname: fullName,
+      gender: gender,
+      profilePic: profilePic,
+    );
   }
 
   static MyUser fromEntity(UserEntites userEntity) {
     return MyUser(
-        id: userEntity.id,
-        email: userEntity.email,
-        fullname: userEntity.fullname,
-        gender: userEntity.gender,
-        profilePic: userEntity.profilePic,
-        lastSeen: userEntity.lastSeen);
+      email: userEntity.email,
+      fullName: userEntity.fullname,
+      gender: userEntity.gender,
+      profilePic: userEntity.profilePic,
+    );
   }
 
   @override
-  List<Object?> get props =>
-      [id, email, fullname, gender, profilePic, lastSeen];
+  List<Object?> get props => [email, fullName, gender, profilePic];
 }
