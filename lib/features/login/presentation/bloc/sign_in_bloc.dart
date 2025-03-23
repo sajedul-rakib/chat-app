@@ -6,10 +6,12 @@ import 'package:equatable/equatable.dart';
 import '../../domain/repositories/login_repo.dart';
 
 part 'sign_in_event.dart';
+
 part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final LoginRepo _loginRepo;
+
   SignInBloc({required LoginRepo loginRepo})
       : _loginRepo = loginRepo,
         super(SignInInitial()) {
@@ -17,12 +19,16 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInRequired>((event, emit) async {
       emit(SignInProccess());
       try {
-        await _loginRepo.signIn(
+        final response = await _loginRepo.signIn(
             email: event.email, password: event.password);
-        emit(SignInSuccess());
+        if (response) {
+          emit(SignInSuccess());
+        } else {
+          emit(SignInFailure(errorMessage: "Log in Failed"));
+        }
       } catch (e) {
         emit(SignInFailure(errorMessage: e.toString()));
-        log('from bloc:${e.toString()}');
+        log('from signIn bloc:${e.toString()}');
         rethrow;
       }
     });

@@ -14,9 +14,10 @@ class AuthenticationBloc
   AuthenticationBloc({required LoginRepo loginRepo})
       : _loginRepo = loginRepo,
         super(const AuthenticationState.unknown()) {
-    on<AuthenticationUserChanged>((event, emit) {
-      if (event.token != null) {
-        emit(AuthenticationState.authenticate(event.token!));
+    on<AuthenticationUserChanged>((event, emit)async {
+      bool result=await _loginRepo.checkUserLoggedIn();
+      if (result) {
+        emit(AuthenticationState.authenticate());
       } else {
         emit(const AuthenticationState.unAuthenticate());
       }

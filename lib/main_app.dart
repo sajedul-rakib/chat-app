@@ -49,7 +49,7 @@ class MainApp extends StatelessWidget {
             create: (_) => GetFriendListBloc(chatRepo: _chatRepo))
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
-        bloc: ThemeBloc()..add(InitialTheme()),
+        bloc: ThemeBloc(),
         builder: (BuildContext context, state) {
           log('from main app ${state.themeType}');
           return MaterialApp(
@@ -77,22 +77,25 @@ class MainApp extends StatelessWidget {
             },
             initialRoute: RouteName.initial,
             home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                bloc: AuthenticationBloc(loginRepo: _loginRepo)
+                  ..add(AuthenticationUserChanged()),
                 builder: (context, state) {
-              if (state.status == AuthenticateStatus.authenticate) {
-                return MultiBlocProvider(
-                  providers: [
-                    BlocProvider<ThemeBloc>(
-                      create: (_) => ThemeBloc(),
-                    ),
-                    BlocProvider<GetFriendListBloc>(
-                        create: (_) => GetFriendListBloc(chatRepo: _chatRepo)),
-                  ],
-                  child: BottomNavBar(),
-                );
-              } else {
-                return LogInScreen();
-              }
-            }),
+                  if (state.status == AuthenticateStatus.authenticate) {
+                    return MultiBlocProvider(
+                      providers: [
+                        BlocProvider<ThemeBloc>(
+                          create: (_) => ThemeBloc(),
+                        ),
+                        BlocProvider<GetFriendListBloc>(
+                            create: (_) =>
+                                GetFriendListBloc(chatRepo: _chatRepo)),
+                      ],
+                      child: BottomNavBar(),
+                    );
+                  } else {
+                    return LogInScreen();
+                  }
+                }),
             title: "Chateo",
           );
         },

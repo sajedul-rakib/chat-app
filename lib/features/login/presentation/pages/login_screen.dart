@@ -38,6 +38,13 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   @override
+  void dispose() {
+    _emailETController.dispose();
+    _passwordETController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
