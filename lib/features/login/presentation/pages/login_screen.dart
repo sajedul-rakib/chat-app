@@ -6,7 +6,6 @@ import 'package:chat_app/router/route_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../bloc/sign_in_bloc.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -56,13 +55,11 @@ class _LogInScreenState extends State<LogInScreen> {
               Navigator.pushReplacementNamed(
                   context, RouteName.bottomNavBarScreen);
 
-              //snackbar
               CustomSnackbar.show(
                   context: context,
                   message: "Log in successful",
                   backgroundColor: Theme.of(context).colorScheme.secondary);
             } else if (state is SignInFailure) {
-              //snackbar
               CustomSnackbar.show(
                   context: context,
                   message: state.errorMessage,

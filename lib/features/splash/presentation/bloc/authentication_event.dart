@@ -8,7 +8,6 @@ abstract class AuthenticationEvent extends Equatable {
 }
 
 class AuthenticationUserChanged extends AuthenticationEvent {
-  const AuthenticationUserChanged({this.token});
+  const AuthenticationUserChanged();
 
-  final String? token;
 }

@@ -1,9 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
-import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/features/splash/presentation/widgets/app_button.dart';
 import 'package:chat_app/features/widgets/circular_progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,17 +11,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../router/route_name.dart';
+import '../../../widgets/custom_snackbar.dart';
 import '../../data/models/model.dart';
 import '../bloc/sign_up_bloc.dart';
 
-class SigninScreen extends StatefulWidget {
-  const SigninScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<SigninScreen> createState() => _SigninScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SigninScreenState extends State<SigninScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   //profile pic
   XFile? profilePic;
   late String _gender = 'male';
@@ -70,17 +69,18 @@ class _SigninScreenState extends State<SigninScreen> {
                   _passwordETController.clear();
                   _nameETController.clear();
                   state.isSuccess
-                      ? AwesomeSnackbarContent(
-                          contentType: ContentType.success,
-                          title: 'Well done!',
-                          message:
-                              'Congratulation.You are successfully create you account',
-                        )
-                      : AwesomeSnackbarContent(
-                          contentType: ContentType.failure,
-                          title: 'Failure',
-                          message: 'Sorry.You are not able create you account',
-                        );
+                      ? {
+                          CustomSnackbar.show(
+                              context: context,
+                              message: "Sign up successful",
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary)
+                        }
+                      : CustomSnackbar.show(
+                          context: context,
+                          message: "Sign up failed",
+                          backgroundColor: Theme.of(context).colorScheme.error);
+                  Navigator.pushReplacementNamed(context,RouteName.logInScreen);
                 }
                 if (state is SignUpFailure) {
                   log(state.errorMessage);

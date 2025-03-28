@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 class CustomSnackbar {
   static void show(
-      {required context, required String message, Color? backgroundColor}) {
+      {required BuildContext context, required String message, Color? backgroundColor}) {
     final snackBar = SnackBar(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       clipBehavior: Clip.antiAlias,
+      behavior: SnackBarBehavior.floating,
       backgroundColor:
           backgroundColor ?? Theme.of(context).colorScheme.secondary,
       content: Text(message,

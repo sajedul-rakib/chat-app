@@ -1,8 +1,6 @@
-import 'dart:developer';
-
 import 'package:chat_app/features/chats/data/repositories/chat_repositories.dart';
+import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
 import 'package:chat_app/shared/shared.dart';
-import 'package:chat_app/shared/theme_shared.dart';
 import 'package:chat_app/simple_bloc_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,30 +12,20 @@ import 'main_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //bloc observer
   Bloc.observer = SimpleBlocObserver();
-  await SharedData.checkIsFirstOpen();
-  String? theme = await ThemeShared.getTheme();
-  ThemeMode? themeMode;
-  if (theme != null) {
-    if (theme == 'light') {
-      themeMode = ThemeMode.light;
-    } else if (theme == 'dark') {
-      themeMode = ThemeMode.dark;
-    } else {
-      themeMode = ThemeMode.system;
-    }
-  } else {
-    themeMode = ThemeMode.system;
-  }
-  try{
-    dotenv.load(fileName: ".env");
-  }catch(err){
-    log(err.toString());
-  }
+  //Initialize preferences
+
+  // load the env file which contain various data
+ await dotenv.load(fileName: ".env");
+ await SharedData.init();
+ bool checkIsFirstOpen=await SharedData.checkIsFirstOpen();
+ SharedData.setIsFirstOpen();
   runApp(MainApp(
     signupRepo: SignupRepo(),
     loginRepo: LoginRepo(),
     chatRepo: ChatRepositories(),
-    themeMode: themeMode,
+    messageRepositories: MessageRepositories(),
+    checkIsFirstOpen:checkIsFirstOpen
   ));
 }

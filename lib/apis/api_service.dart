@@ -10,11 +10,12 @@ class ApiService {
     //Uri parse
     try {
       final Uri parseUrl = Uri.parse(url);
-      http.Response response = await http.get(parseUrl);
-
+      http.Response response = await http.get(parseUrl, headers: {
+        "content-type": 'application/json',
+        "authorization": 'Barear $token',
+      },);
       return ResponseModel(
-          status: response.statusCode,
-          body: response.body as Map<String, dynamic>);
+          status: response.statusCode, body: jsonDecode(response.body));
     } catch (err) {
       log(err.toString());
       rethrow;
@@ -31,11 +32,13 @@ class ApiService {
       final Uri parseUrl = Uri.parse(url);
       http.Response response = await http.post(parseUrl,
           body: jsonEncode(body),
-          headers: {"content-type": 'application/json', "token": token});
+          headers: {
+            "content-type": 'application/json',
+            "authorization": 'Barear $token'
+          });
 
       return ResponseModel(
-          status: response.statusCode,
-          body: jsonDecode(response.body));
+          status: response.statusCode, body: jsonDecode(response.body));
     } catch (err) {
       log(err.toString());
       rethrow;

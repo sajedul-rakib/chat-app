@@ -66,7 +66,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: AppButton(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
                   onPressed: () {
-                    context.pushReplacementNamed(RouteName.logInScreen);
+                    Navigator.pushReplacementNamed(
+                        context, RouteName.logInScreen);
                   },
                   buttonTitle: "Start Messaging",
                 ),

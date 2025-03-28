@@ -23,6 +23,6 @@ final class SignOutProccess extends SignInState {}
 final class SignOutSuccess extends SignInState {}
 
 final class SignOutFailure extends SignInState {
-  final String errorMessage;
-  const SignOutFailure({required this.errorMessage});
+  final String? errorMessage;
+  const SignOutFailure({this.errorMessage});
 }

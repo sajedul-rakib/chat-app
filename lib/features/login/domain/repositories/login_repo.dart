@@ -16,8 +16,8 @@ class LoginRepo extends LogInRepository {
 
       if (response.status == 200) {
         //save user token
-        log(response.body.toString());
         SharedData.saveToLocal("token", response.body['token']);
+        SharedData.saveToLocal("id", response.body['id']);
         return true;
       } else {
         return false;
@@ -29,25 +29,23 @@ class LoginRepo extends LogInRepository {
   }
 
   @override
-  Future<bool> checkUserLoggedIn() async {
+  Future<String> checkUserLoggedIn() async {
     try {
       String getToken = await SharedData.getLocalSaveItem('token') ?? '';
 
       if (getToken.isNotEmpty) {
-        log(getToken);
-        return true;
+        return getToken;
       } else {
-        return false;
+        return '';
       }
     } catch (err) {
       log(err.toString());
-      return false;
+      rethrow;
     }
   }
 
   @override
-  Future<void> logOut() {
-    // TODO: implement logOut
-    throw UnimplementedError();
+  Future<bool> logOut() async {
+   return SharedData.deleteAllSave();
   }
 }

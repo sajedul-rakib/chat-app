@@ -1,13 +1,15 @@
-import 'dart:developer';
-
 import 'package:chat_app/features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
-import 'package:chat_app/features/chats/domain/repositories/user_repo.dart';
+import 'package:chat_app/features/chats/data/models/user.dart';
+import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
 import 'package:chat_app/features/chats/presentation/bloc/bloc/get_friend_list_bloc.dart';
+import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
+import 'package:chat_app/features/conversation/presentation/bloc/message_bloc.dart';
 import 'package:chat_app/features/conversation/presentation/pages/conversation_screen.dart';
 import 'package:chat_app/features/login/presentation/pages/login_screen.dart';
 import 'package:chat_app/features/signup/data/models/user.dart';
 import 'package:chat_app/features/signup/presentation/pages/signup_screen.dart';
 import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
+import 'package:chat_app/features/splash/presentation/page/splash_screen.dart';
 import 'package:chat_app/router/route_name.dart';
 import 'package:chat_app/theme/bloc/theme_bloc.dart';
 import 'package:flutter/material.dart';
@@ -24,15 +26,20 @@ class MainApp extends StatelessWidget {
       {super.key,
       required SignupRepo signupRepo,
       required LoginRepo loginRepo,
-      required ThemeMode themeMode,
-      required ChatRepo chatRepo})
+      required ChatRepo chatRepo,
+      required MessageRepositories messageRepositories,
+      required bool checkIsFirstOpen})
       : _signupRepo = signupRepo,
         _loginRepo = loginRepo,
-        _chatRepo = chatRepo;
+        _chatRepo = chatRepo,
+        _messageRepositories = messageRepositories,
+        _checkIsFirstOpen = checkIsFirstOpen;
 
   final SignupRepo _signupRepo;
   final LoginRepo _loginRepo;
   final ChatRepo _chatRepo;
+  final MessageRepositories _messageRepositories;
+  final bool _checkIsFirstOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -46,56 +53,69 @@ class MainApp extends StatelessWidget {
         RepositoryProvider<AuthenticationBloc>(
             create: (_) => AuthenticationBloc(loginRepo: _loginRepo)),
         RepositoryProvider<GetFriendListBloc>(
-            create: (_) => GetFriendListBloc(chatRepo: _chatRepo))
+            create: (_) => GetFriendListBloc(chatRepo: _chatRepo)),
+        RepositoryProvider<MessageBloc>(
+            create: (_) =>
+                MessageBloc(messageRepositories: _messageRepositories))
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         bloc: ThemeBloc(),
         builder: (BuildContext context, state) {
-          log('from main app ${state.themeType}');
           return MaterialApp(
-            themeMode: state.themeType == ThemeType.light
-                ? ThemeMode.light
-                : ThemeMode.dark,
+            // themeMode: state.themeType == ThemeType.light
+            //     ? ThemeMode.light
+            //     : ThemeMode.dark,
+            themeMode: ThemeMode.dark,
             darkTheme: AppTheme.darkTheme(context),
             theme: AppTheme.lightTheme(context),
             debugShowCheckedModeBanner: false,
-            // routerConfig: AppRouter.router,
             routes: {
               // RouteName.initial: (BuildContext context) => SplashScreen(),
               RouteName.logInScreen: (BuildContext context) => LogInScreen(),
               RouteName.bottomNavBarScreen: (BuildContext context) =>
                   BottomNavBar(),
-              RouteName.signInScreen: (BuildContext context) => SigninScreen(),
+              RouteName.signInScreen: (BuildContext context) => SignInScreen(),
               RouteName.conversationScreen: (BuildContext context) {
-                final MyUser myuser =
-                    ModalRoute.of(context)!.settings.arguments as MyUser;
+                final Map<String, dynamic> args = ModalRoute.of(context)!
+                    .settings
+                    .arguments as Map<String, dynamic>;
 
                 return ConversationScreen(
-                  myuser: myuser,
+                  friendUser: args['user'] as User,
+                  conversationId: args['conversationId'],
+                  loggedUserId: args['loggedUserId'],
                 );
               },
             },
             initialRoute: RouteName.initial,
-            home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                bloc: AuthenticationBloc(loginRepo: _loginRepo)
-                  ..add(AuthenticationUserChanged()),
-                builder: (context, state) {
-                  if (state.status == AuthenticateStatus.authenticate) {
-                    return MultiBlocProvider(
-                      providers: [
-                        BlocProvider<ThemeBloc>(
-                          create: (_) => ThemeBloc(),
-                        ),
-                        BlocProvider<GetFriendListBloc>(
-                            create: (_) =>
-                                GetFriendListBloc(chatRepo: _chatRepo)),
-                      ],
-                      child: BottomNavBar(),
-                    );
-                  } else {
-                    return LogInScreen();
-                  }
-                }),
+            home: _checkIsFirstOpen
+                ? SplashScreen()
+                : BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                    bloc: AuthenticationBloc(loginRepo: _loginRepo)
+                      ..add(AuthenticationUserChanged()),
+                    builder: (context, state) {
+                      if (state.status == AuthenticateStatus.authenticate) {
+                        return MultiBlocProvider(
+                          providers: [
+                            BlocProvider<ThemeBloc>(
+                              create: (_) => ThemeBloc(),
+                            ),
+                            BlocProvider<AuthenticationBloc>(
+                                create: (_) =>
+                                    AuthenticationBloc(loginRepo: _loginRepo)),
+                            BlocProvider<GetFriendListBloc>(
+                                create: (_) =>
+                                    GetFriendListBloc(chatRepo: _chatRepo)),
+                            BlocProvider<MessageBloc>(
+                                create: (_) => MessageBloc(
+                                    messageRepositories: _messageRepositories)),
+                          ],
+                          child: BottomNavBar(),
+                        );
+                      } else {
+                        return LogInScreen();
+                      }
+                    }),
             title: "Chateo",
           );
         },

@@ -10,12 +10,11 @@ part 'theme_event.dart';
 part 'theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
-  late StreamSubscription? _themeSubscription;
   ThemeBloc() : super(const ThemeState.system()) {
     on<InitialTheme>((event, emit) async {
       String? themeMode = await ThemeShared.getTheme();
       if (themeMode != null) {
-        log('log from themebloc $themeMode');
+        log('log from theme bloc $themeMode');
         if (themeMode == 'light') {
           emit(ThemeState.light(themeMode: ThemeMode.light));
         } else if (themeMode == 'dark') {
@@ -35,7 +34,6 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
       } else {
         emit(const ThemeState.system());
       }
-
       //save the theme mode to shared preference
       ThemeShared.setThemeMode(event.themeMode);
     });
@@ -43,7 +41,6 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 
   @override
   Future<void> close() {
-    _themeSubscription?.cancel();
     return super.close();
   }
 }

@@ -62,9 +62,9 @@ class ContactScreen extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: 20,
                 itemBuilder: (_, index) {
-                  return const FriendListTile(
-                    fullName: 'Sajedul Islam Rakib',
-                  );
+                  // return const FriendListTile(
+                  //   conversation:null,
+                  // );
                 },
                 separatorBuilder: (_, int index) {
                   return const Divider();

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:chat_app/shared/shared.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../login/domain/repositories/login_repo.dart';
@@ -15,9 +16,10 @@ class AuthenticationBloc
       : _loginRepo = loginRepo,
         super(const AuthenticationState.unknown()) {
     on<AuthenticationUserChanged>((event, emit)async {
-      bool result=await _loginRepo.checkUserLoggedIn();
-      if (result) {
-        emit(AuthenticationState.authenticate());
+      String result=await _loginRepo.checkUserLoggedIn();
+      String userId=await SharedData.getLocalSaveItem("id")?? '';
+      if (result.isNotEmpty && userId.isNotEmpty) {
+        emit(AuthenticationState.authenticate(result,userId));
       } else {
         emit(const AuthenticationState.unAuthenticate());
       }

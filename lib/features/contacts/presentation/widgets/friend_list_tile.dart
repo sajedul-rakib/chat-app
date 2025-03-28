@@ -1,24 +1,32 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:flutter/material.dart';
 
 class FriendListTile extends StatelessWidget {
-  const FriendListTile(
-      {super.key, this.onPressed, required this.fullName, this.imageUrl});
+  const FriendListTile({
+    super.key,
+    this.onPressed,
+    required this.user,
+  });
 
   final Function()? onPressed;
-  final String fullName;
-  final String? imageUrl;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
+    log(jsonEncode(user.toJson()));
     return ListTile(
       onTap: onPressed,
       leading: Stack(
         alignment: AlignmentDirectional.topEnd,
         children: [
-          imageUrl != null
+          user.profilePic != null &&
+                 user.profilePic!.isNotEmpty
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-                  child: Image.network(imageUrl!))
+                  child: Image.network(user.profilePic!))
               : Image.asset('assets/images/user.png'),
           Container(
             width: 17,
@@ -31,7 +39,7 @@ class FriendListTile extends StatelessWidget {
           )
         ],
       ),
-      title: Text(fullName),
+      title: Text(user.fullName ?? ''),
       subtitle: const Text("Last seen yestarday"),
     );
   }

@@ -36,8 +36,12 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignOutRequired>((event, emit) async {
       emit(SignOutProccess());
       try {
-        await _loginRepo.logOut();
-        emit(SignOutSuccess());
+        bool result = await _loginRepo.logOut();
+        if (result) {
+          emit(SignOutSuccess());
+        } else {
+          emit(SignOutFailure());
+        }
       } catch (e) {
         emit(SignOutFailure(errorMessage: e.toString()));
         rethrow;

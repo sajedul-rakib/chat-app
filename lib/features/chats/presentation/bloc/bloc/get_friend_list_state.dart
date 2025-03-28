@@ -1,24 +1,39 @@
 part of 'get_friend_list_bloc.dart';
 
-enum Status { initial, loading, success, failure }
-
-final class GetFriendListState extends Equatable {
-  final Status status;
-  final List<MyUser>? friendList;
-  final String? errorMessage;
-
-  const GetFriendListState._(
-      {this.status = Status.initial, this.friendList, this.errorMessage});
-
-  const GetFriendListState.initial() : this._();
-
-  const GetFriendListState.loading() : this._(status: Status.loading);
-
-  const GetFriendListState.success(List<MyUser> myUser)
-      : this._(status: Status.success, friendList: myUser);
-
-  const GetFriendListState.failure(String errorMessage)
-      : this._(errorMessage: errorMessage);
+abstract class GetFriendListState extends Equatable {
   @override
-  List<Object> get props => [status];
+  List<Object> get props => [];
+}
+
+final class GetFriendListInitial extends GetFriendListState {}
+final class GetFriendListLoading extends GetFriendListState {}
+final class GetFriendListSuccess extends GetFriendListState {
+  final String userId;
+  final List<Conversation> friendList;
+
+  GetFriendListSuccess({required this.userId, required this.friendList});
+}
+final class GetFriendListFailure extends GetFriendListState {
+  final String? errMsg;
+
+  GetFriendListFailure({this.errMsg});
+}
+
+final class SearchFriendLoading extends GetFriendListState {}
+final class SearchFriendSuccess extends GetFriendListState {
+
+}
+final class SearchFriendFailure extends GetFriendListState {
+  final String? errMsg;
+  SearchFriendFailure({this.errMsg});
+}
+
+final class AddFriendLoading extends GetFriendListState{}
+final class AddFriendSuccess extends GetFriendListState{
+  final Conversation conversation;
+  AddFriendSuccess({required this.conversation});
+}
+final class AddFriendFailure extends GetFriendListState{
+  final String? errMsg;
+  AddFriendFailure({this.errMsg});
 }

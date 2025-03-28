@@ -8,6 +8,22 @@ abstract class GetFriendListEvent extends Equatable {
 }
 
 final class GetFriendListRequested extends GetFriendListEvent {
-  final String subscriberId;
-  const GetFriendListRequested({required this.subscriberId});
+  final String token;
+
+  const GetFriendListRequested({required this.token});
+}
+
+final class SearchFriendRequestRequired extends GetFriendListEvent {
+  final String token;
+  final String keyword;
+
+  const SearchFriendRequestRequired(
+      {required this.token, required this.keyword});
+}
+
+final class AddFriendRequestRequired extends GetFriendListEvent {
+  final String token;
+  final User friend;
+
+  const AddFriendRequestRequired({required this.token, required this.friend});
 }

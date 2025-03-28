@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ListTile(
                   leading: const CircleAvatar(
                     backgroundColor: Color(0xff152033),
-                    backgroundImage: NetworkImage('https://feji.us/m5az7q'),
+                    // backgroundImage: NetworkImage('https://feji.us/m5az7q'),
                   ),
                   title: Text(
                     "Demo Name",
@@ -82,60 +82,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-                MenuList(
-                  leadingIcon: context.read<ThemeBloc>().state.themeType ==
-                          ThemeType.dark
-                      ? Icons.dark_mode
-                      : context.read<ThemeBloc>().state.themeType ==
-                              ThemeType.light
-                          ? Icons.light_mode
-                          : Icons.bookmark_outline,
-                  title:
-                      "Appereane - ${context.read<ThemeBloc>().state.themeType == ThemeType.dark ? "Dark" : context.read<ThemeBloc>().state.themeType == ThemeType.light ? "Light" : "System"}",
-                  trailingWidgets: PopupMenuButton(itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                          value: 'Light',
-                          onTap: () => BlocProvider.of<ThemeBloc>(context)
-                              .add(const ThemeModeChanged(themeMode: 'light')),
-                          child: MenuList(
-                            title: 'Light',
-                            trailingWidgets: Visibility(
-                                visible:
-                                    context.read<ThemeBloc>().state.themeType ==
-                                        ThemeType.light,
-                                child: const Icon(Icons.check)),
-                          )),
-                      PopupMenuItem(
-                          onTap: () {
-                            context
-                                .read<ThemeBloc>()
-                                .add(ThemeModeChanged(themeMode: 'dark'));
-                          },
-                          value: 'Dark',
-                          child: MenuList(
-                            title: 'Dark',
-                            trailingWidgets: Visibility(
-                                visible:
-                                    context.read<ThemeBloc>().state.themeType ==
-                                        ThemeType.dark,
-                                child: const Icon(Icons.check)),
-                          )),
-                      PopupMenuItem(
-                          onTap: () => BlocProvider.of<ThemeBloc>(context)
-                              .add(const ThemeModeChanged(themeMode: 'system')),
-                          value: 'System',
-                          child: MenuList(
-                            title: 'System',
-                            trailingWidgets: Visibility(
-                                visible:
-                                    context.read<ThemeBloc>().state.themeType ==
-                                        ThemeType.system,
-                                child: const Icon(Icons.check)),
-                          ))
-                    ];
-                  }),
-                ),
+                BlocBuilder<ThemeBloc, ThemeState>(
+                    bloc: ThemeBloc(),
+                    builder: (context, state) {
+                      return MenuList(
+                        leadingIcon: state.themeType == ThemeType.dark
+                            ? Icons.dark_mode
+                            : state.themeType == ThemeType.light
+                                ? Icons.light_mode
+                                : Icons.bookmark_outline,
+                        title:
+                            "Appereane - ${state.themeType == ThemeType.dark ? "Dark" : state.themeType == ThemeType.light ? "Light" : "System"}",
+                        trailingWidgets:
+                            PopupMenuButton(itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                                value: 'Light',
+                                onTap: () => BlocProvider.of<ThemeBloc>(context)
+                                    .add(const ThemeModeChanged(
+                                        themeMode: 'light')),
+                                child: MenuList(
+                                  title: 'Light',
+                                  trailingWidgets: Visibility(
+                                      visible:
+                                          state.themeType == ThemeType.light,
+                                      child: const Icon(Icons.check)),
+                                )),
+                            PopupMenuItem(
+                                onTap: () {
+                                  context
+                                      .read<ThemeBloc>()
+                                      .add(ThemeModeChanged(themeMode: 'dark'));
+                                },
+                                value: 'Dark',
+                                child: MenuList(
+                                  title: 'Dark',
+                                  trailingWidgets: Visibility(
+                                      visible:
+                                          state.themeType == ThemeType.dark,
+                                      child: const Icon(Icons.check)),
+                                )),
+                            PopupMenuItem(
+                                onTap: () => BlocProvider.of<ThemeBloc>(context)
+                                    .add(const ThemeModeChanged(
+                                        themeMode: 'system')),
+                                value: 'System',
+                                child: MenuList(
+                                  title: 'System',
+                                  trailingWidgets: Visibility(
+                                      visible:
+                                          state.themeType == ThemeType.system,
+                                      child: const Icon(Icons.check)),
+                                ))
+                          ];
+                        }),
+                      );
+                    }),
                 const MenuList(
                   leadingIcon: Icons.notifications,
                   title: "Notification",
@@ -172,33 +174,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // void _showbar(BuildContext context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return Container(
-  //           width: 300,
-  //           height: 200,
-  //           decoration:
-  //               BoxDecoration(color: Theme.of(context).colorScheme.secondary),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               const Text("Do you want log out?"),
-  //               Padding(
-  //                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-  //                 child: Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     ElevatedButton(
-  //                         onPressed: () {}, child: const Text("Yes")),
-  //                     ElevatedButton(onPressed: () {}, child: const Text("No")),
-  //                   ],
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
+// void _showbar(BuildContext context) {
+//   showDialog(
+//       context: context,
+//       builder: (context) {
+//         return Container(
+//           width: 300,
+//           height: 200,
+//           decoration:
+//               BoxDecoration(color: Theme.of(context).colorScheme.secondary),
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               const Text("Do you want log out?"),
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     ElevatedButton(
+//                         onPressed: () {}, child: const Text("Yes")),
+//                     ElevatedButton(onPressed: () {}, child: const Text("No")),
+//                   ],
+//                 ),
+//               )
+//             ],
+//           ),
+//         );
+//       });
+// }
 }
