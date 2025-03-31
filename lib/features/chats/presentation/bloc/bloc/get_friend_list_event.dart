@@ -12,18 +12,3 @@ final class GetFriendListRequested extends GetFriendListEvent {
 
   const GetFriendListRequested({required this.token});
 }
-
-final class SearchFriendRequestRequired extends GetFriendListEvent {
-  final String token;
-  final String keyword;
-
-  const SearchFriendRequestRequired(
-      {required this.token, required this.keyword});
-}
-
-final class AddFriendRequestRequired extends GetFriendListEvent {
-  final String token;
-  final User friend;
-
-  const AddFriendRequestRequired({required this.token, required this.friend});
-}

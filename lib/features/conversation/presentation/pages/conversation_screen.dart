@@ -1,17 +1,21 @@
-import 'dart:developer';
-import 'dart:io';
+import 'dart:convert';
+
 import 'package:chat_app/features/chats/data/models/user.dart';
+import 'package:chat_app/features/conversation/datasource/models/message.dart';
 import 'package:chat_app/features/conversation/presentation/bloc/message_bloc.dart';
 import 'package:chat_app/features/widgets/circular_progress_indicator.dart';
+import 'package:chat_app/features/widgets/custom_snackbar.dart';
 import 'package:chat_app/shared/shared.dart';
+import 'package:chat_app/theme/color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:web_socket_channel/web_socket_channel.dart' ;
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../signup/presentation/widget/text_form_field.dart';
+import '../send_bloc/send_bloc.dart';
 import '../widgets/message_box.dart';
 
 class ConversationScreen extends StatefulWidget {
@@ -34,6 +38,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   late TextEditingController _textEditingController;
   late IO.Socket _socket;
   late String token;
+  late Message _message;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -56,33 +61,29 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   void _socketConnect() {
-    _socket = IO.io('http://192.168.0.100:3000',
+    _socket = IO.io(
+        'http://192.168.0.100:3000',
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
-            .setExtraHeaders({'Authorization': 'Bearer $token'}) // Include token
+            .setExtraHeaders(
+                {'Authorization': 'Bearer $token'}) // Include token
             .build());
     _socket.connect();
 
-    _socket.onConnect((_) => log("✅ Connected to Socket.IO Server"));
-
-
-    _socket.onConnectError((err){
-      if(err is SocketException){
-        log('from message ${err.message}');
-        log('from address ${err.address!.address.toString()}');
-        log('from os error ${err.osError!.message}');
-      }
-      else if(err is WebSocketException){
-         log(err.message);
-      }else{
-        log(err);
-      }
+    _socket.onConnect((data) {
+      _socket.on("new_message", (data) {
+        _message = Message.fromJson(jsonDecode(jsonEncode(data['data'])));
+        context.read<MessageBloc>().add(NewMessageReceived(_message));
+      });
     });
 
-    log(_socket.connected.toString());
+    _socket.onConnectError((err) {
+      _socket.disconnect();
+      _socket.dispose();
+      return;
+    });
   }
-
 
   @override
   void dispose() {
@@ -99,7 +100,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         'msg': _textEditingController.text.trim(),
         'receiver': widget.friendUser.sId
       };
-      context.read<MessageBloc>().add(SendMessageRequest(
+      context.read<SendBloc>().add(SendMessageRequest(
           message: message,
           conversationId: widget.conversationId,
           token: token));
@@ -130,10 +131,20 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ),
           ],
         ),
-        actions: const [
-          Icon(FontAwesomeIcons.magnifyingGlass),
+        actions: [
+          InkWell(
+              onTap: () {
+                CustomSnackbar.show(
+                    context: context, message: "It's will update later");
+              },
+              child: Icon(FontAwesomeIcons.phone)),
           SizedBox(width: 20),
-          Icon(FontAwesomeIcons.bars),
+          InkWell(
+              onTap: () {
+                CustomSnackbar.show(
+                    context: context, message: "It's will update later");
+              },
+              child: Icon(FontAwesomeIcons.video)),
           SizedBox(width: 20),
         ],
       ),
@@ -169,7 +180,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   bubbleType: sender
                                       ? BubbleType.sendBubble
                                       : BubbleType.receiverBubble,
-                                  message: message?.msg ?? "",
+                                  message: message!,
                                 ),
                               ],
                             ),
@@ -197,19 +208,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   filledInput: Theme.of(context).brightness == Brightness.dark
                       ? true
                       : false,
+                  filledColor: Theme.of(context).brightness == Brightness.dark
+                      ? ColorSchemed.darkColorScheme.primary
+                      : ColorSchemed.lightColorScheme.tertiary
+                          .withValues(alpha: 10),
                   hintText: "Message",
                   textEditionController: _textEditingController,
                   onChange: (value) => setState(() {}),
                   prefix: const Icon(CupertinoIcons.mail),
                   suffix: isMessageEmpty
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(CupertinoIcons.mic_fill),
-                            SizedBox(width: 10),
-                            Icon(CupertinoIcons.qrcode_viewfinder),
-                          ],
-                        )
+                      ? InkWell(
+                          onTap: () {
+                            CustomSnackbar.show(
+                                context: context, message: "Update will later");
+                          },
+                          child: Icon(CupertinoIcons.mic_fill))
                       : InkWell(
                           onTap: _sendMessage,
                           child: const Icon(CupertinoIcons.paperplane_fill),

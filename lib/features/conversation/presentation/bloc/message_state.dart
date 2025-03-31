@@ -34,15 +34,3 @@ final class GetMessageStateFailed extends MessageStateFailed {
   const GetMessageStateFailed(super.errMsg);
 }
 
-// ✉️ Send Message States
-final class SendMessageStateLoading extends MessageState {
-  const SendMessageStateLoading();
-}
-
-final class SendMessageStateSuccess extends MessageState {
-  const SendMessageStateSuccess();
-}
-
-final class SendMessageStateFailed extends MessageStateFailed {
-  const SendMessageStateFailed(super.errMsg);
-}

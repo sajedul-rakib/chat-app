@@ -17,7 +17,7 @@ class LoginRepo extends LogInRepository {
       if (response.status == 200) {
         //save user token
         SharedData.saveToLocal("token", response.body['token']);
-        SharedData.saveToLocal("id", response.body['id']);
+        SharedData.saveToLocal("userId", response.body['id']);
         return true;
       } else {
         return false;

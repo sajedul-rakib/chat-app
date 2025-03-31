@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/features/conversation/datasource/models/message.dart';
 import 'package:chat_app/features/conversation/datasource/models/message_model.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
 part 'message_event.dart';
@@ -27,18 +26,17 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       }
     });
 
-    on<SendMessageRequest>((event, emit) async {
-      emit(SendMessageStateLoading());
-      try {
-        bool result = await _messageRepositories.sendMessage(
-            event.message, event.conversationId, event.token);
-        if (result) {
-          emit(SendMessageStateSuccess());
-        } else {
-          emit(SendMessageStateFailed("Send Message Failed"));
-        }
-      } catch (err) {
-        emit(SendMessageStateFailed(err.toString()));
+    on<NewMessageReceived>((event, emit) {
+      if (state is GetMessageStateSuccess) {
+        final successState = state as GetMessageStateSuccess;
+
+        // ✅ Create a new instance of MessageModel with updated messages list
+        final updatedMessageModel = MessageModel(
+          messages: [event.message, ...?successState.messageModel.messages],
+        );
+
+        // ✅ Emit new state with the updated model
+        emit(GetMessageStateSuccess(messageModel: updatedMessageModel));
       }
     });
   }

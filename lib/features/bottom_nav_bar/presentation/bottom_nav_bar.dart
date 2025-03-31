@@ -10,7 +10,8 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends State<BottomNavBar>
+    with WidgetsBindingObserver {
   final List<Widget> _pages = [
     // ContactScreen(),
     const ChatScreen(),
@@ -25,6 +26,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
         _currentIndex = index;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override

@@ -13,7 +13,7 @@ class InputFormField extends StatelessWidget {
       this.onChange,
       this.autoCorrect = false,
       this.filledInput = false,
-      this.focusNode});
+      this.focusNode,this.filledColor});
 
   final bool obscureText;
   final TextEditingController? textEditionController;
@@ -26,6 +26,7 @@ class InputFormField extends StatelessWidget {
   final TextInputType textInputType;
   final bool autoCorrect;
   final FocusNode? focusNode;
+  final Color? filledColor;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,7 @@ class InputFormField extends StatelessWidget {
         obscureText: obscureText,
         controller: textEditionController,
         decoration: InputDecoration(
+          fillColor: filledColor,
           hintText: hintText,
           prefixIcon: prefix,
           suffixIcon: suffix,

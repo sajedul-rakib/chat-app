@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:chat_app/apis/model/response_model.dart';
 import 'package:chat_app/features/chats/data/models/Conversation.dart';
 import 'package:chat_app/features/chats/data/models/conversation_model.dart';
+import 'package:chat_app/features/chats/data/models/search_model.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
 import 'package:chat_app/shared/shared.dart';
 import 'package:equatable/equatable.dart';
@@ -20,42 +22,14 @@ class GetFriendListBloc extends Bloc<GetFriendListEvent, GetFriendListState> {
     on<GetFriendListRequested>((event, emit) async {
       try {
         emit(GetFriendListLoading());
-        ConversationModel conversationModel =
-            await _chatRepo.getFriendList(event.token);
-        String userId = await SharedData.getLocalSaveItem("id") ?? '';
-        if (conversationModel.conversation != null) {
-          emit(GetFriendListSuccess(
-              userId: userId, friendList: conversationModel.conversation!));
-        } else {
-          emit(GetFriendListFailure());
-        }
+        ResponseModel result = await _chatRepo.getFriendList(event.token);
+        String userId = await SharedData.getLocalSaveItem("userId") ?? '';
+        emit(GetFriendListSuccess(
+            userId: userId,
+            friendList: ConversationModel.fromJson(result.body!)));
       } catch (e) {
         emit(GetFriendListFailure(errMsg: e.toString()));
         rethrow;
-      }
-    });
-
-    on<SearchFriendRequestRequired>((event, emit) async {
-      emit(SearchFriendLoading());
-      try {
-        final result = await _chatRepo.searchUser(event.token, event.keyword);
-      } catch (err) {
-        emit(SearchFriendFailure(errMsg: err.toString()));
-      }
-    });
-
-    on<AddFriendRequestRequired>((event, emit) async {
-      emit(AddFriendLoading());
-      try {
-        final result =
-            await _chatRepo.addFriend(event.token, event.friend.toJson());
-        if (result != null) {
-          emit(AddFriendSuccess(conversation: result));
-        } else {
-          emit(AddFriendFailure());
-        }
-      } catch (err) {
-        emit(SearchFriendFailure(errMsg: err.toString()));
       }
     });
   }

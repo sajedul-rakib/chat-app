@@ -5,14 +5,15 @@ import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:flutter/material.dart';
 
 class FriendListTile extends StatelessWidget {
-  const FriendListTile({
-    super.key,
-    this.onPressed,
-    required this.user,
-  });
+  const FriendListTile(
+      {super.key,
+      this.onPressed,
+      required this.user,
+      required this.lastMessage});
 
   final Function()? onPressed;
   final User user;
+  final String? lastMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +23,7 @@ class FriendListTile extends StatelessWidget {
       leading: Stack(
         alignment: AlignmentDirectional.topEnd,
         children: [
-          user.profilePic != null &&
-                 user.profilePic!.isNotEmpty
+          user.profilePic != null && user.profilePic!.isNotEmpty
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(50),
                   child: Image.network(user.profilePic!))
@@ -35,12 +35,16 @@ class FriendListTile extends StatelessWidget {
                 border: Border.all(
                     color: Theme.of(context).colorScheme.primary, width: 2),
                 shape: BoxShape.circle,
-                color: const Color(0xff2CC069)),
+                color: user.status != null
+                    ? user.status == 'online'
+                        ? const Color(0xff2CC069)
+                        : const Color(0xfff54d4d)
+                    : null),
           )
         ],
       ),
       title: Text(user.fullName ?? ''),
-      subtitle: const Text("Last seen yestarday"),
+      subtitle: Text(lastMessage ?? ""),
     );
   }
 }

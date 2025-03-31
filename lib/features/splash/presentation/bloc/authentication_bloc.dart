@@ -17,7 +17,7 @@ class AuthenticationBloc
         super(const AuthenticationState.unknown()) {
     on<AuthenticationUserChanged>((event, emit)async {
       String result=await _loginRepo.checkUserLoggedIn();
-      String userId=await SharedData.getLocalSaveItem("id")?? '';
+      String userId=await SharedData.getLocalSaveItem("userId")?? '';
       if (result.isNotEmpty && userId.isNotEmpty) {
         emit(AuthenticationState.authenticate(result,userId));
       } else {
