@@ -4,14 +4,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedData {
   static SharedPreferences? _preferences;
   static String? _token;
+  static String? _userId;
 
   static String? get token => _token;
+  static String? get userId => _userId;
 
   // Initialize shared preferences and load token
   static Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
-    // Initialize token if it exists in shared preferences
     _token = _preferences?.getString('token');
+    _token = _preferences?.getString('userId');
   }
 
   static SharedPreferences get instance {
@@ -37,6 +39,9 @@ class SharedData {
     await instance.setString(key, value);
     if (key == "token") {
       _token = value; // Update the token value when saved
+    }
+    if(key=='userId'){
+      _userId=value;
     }
   }
 

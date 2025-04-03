@@ -1,13 +1,16 @@
 import 'package:chat_app/features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
+import 'package:chat_app/features/chats/presentation/add_user_bloc/add_user_bloc.dart';
 import 'package:chat_app/features/chats/presentation/bloc/bloc/get_friend_list_bloc.dart';
+import 'package:chat_app/features/chats/presentation/search_user_bloc/search_user_bloc.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
 import 'package:chat_app/features/conversation/presentation/bloc/message_bloc.dart';
 import 'package:chat_app/features/conversation/presentation/pages/conversation_screen.dart';
 import 'package:chat_app/features/conversation/presentation/send_bloc/send_bloc.dart';
 import 'package:chat_app/features/login/presentation/pages/login_screen.dart';
-import 'package:chat_app/features/signup/data/models/user.dart';
+import 'package:chat_app/features/profile/data/repositories/profile_repo.dart';
+import 'package:chat_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:chat_app/features/signup/presentation/pages/signup_screen.dart';
 import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/features/splash/presentation/page/splash_screen.dart';
@@ -28,17 +31,20 @@ class MainApp extends StatelessWidget {
     required SignupRepo signupRepo,
     required LoginRepo loginRepo,
     required ChatRepo chatRepo,
+    required ProfileRepo profileRepo,
     required MessageRepositories messageRepositories,
     required bool checkIsFirstOpen,
   })  : _signupRepo = signupRepo,
         _loginRepo = loginRepo,
         _chatRepo = chatRepo,
+        _profileRepo = profileRepo,
         _messageRepositories = messageRepositories,
         _checkIsFirstOpen = checkIsFirstOpen;
 
   final SignupRepo _signupRepo;
   final LoginRepo _loginRepo;
   final ChatRepo _chatRepo;
+  final ProfileRepo _profileRepo;
   final MessageRepositories _messageRepositories;
   final bool _checkIsFirstOpen;
 
@@ -57,12 +63,19 @@ class MainApp extends StatelessWidget {
                 MessageBloc(messageRepositories: _messageRepositories)),
         BlocProvider(
             create: (_) => SendBloc(messageRepositories: _messageRepositories)),
-        BlocProvider(create: (_) => ThemeBloc()),
+        BlocProvider(create: (_) => SearchUserBloc(chatRepo: _chatRepo)),
+        BlocProvider(create: (_) => AddUserBloc(chatRepo: _chatRepo)),
+        BlocProvider(create: (_) => ProfileBloc(profileRepo: _profileRepo)),
+        BlocProvider(create: (_) => ThemeBloc()..add(InitialTheme())),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
           return MaterialApp(
-            themeMode: ThemeMode.dark,
+            themeMode: state.themeType == ThemeType.light
+                ? ThemeMode.light
+                : state.themeType == ThemeType.dark
+                    ? ThemeMode.dark
+                    : ThemeMode.system,
             darkTheme: AppTheme.darkTheme(context),
             theme: AppTheme.lightTheme(context),
             debugShowCheckedModeBanner: false,

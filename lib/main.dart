@@ -1,7 +1,9 @@
 import 'package:chat_app/features/chats/data/repositories/chat_repositories.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
+import 'package:chat_app/features/profile/domain/repositories/profile_repository.dart';
 import 'package:chat_app/shared/shared.dart';
 import 'package:chat_app/simple_bloc_observer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,15 +19,16 @@ void main() async {
   //Initialize preferences
 
   // load the env file which contain various data
- await dotenv.load(fileName: ".env");
- await SharedData.init();
- bool checkIsFirstOpen=await SharedData.checkIsFirstOpen();
- SharedData.setIsFirstOpen();
+  await Firebase.initializeApp();
+  await dotenv.load(fileName: ".env");
+  await SharedData.init();
+  bool checkIsFirstOpen = await SharedData.checkIsFirstOpen();
+  SharedData.setIsFirstOpen();
   runApp(MainApp(
-    signupRepo: SignupRepo(),
-    loginRepo: LoginRepo(),
-    chatRepo: ChatRepositories(),
-    messageRepositories: MessageRepositories(),
-    checkIsFirstOpen:checkIsFirstOpen
-  ));
+      signupRepo: SignupRepo(),
+      loginRepo: LoginRepo(),
+      chatRepo: ChatRepositories(),
+      profileRepo: ProfileRepository(),
+      messageRepositories: MessageRepositories(),
+      checkIsFirstOpen: checkIsFirstOpen));
 }

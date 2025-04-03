@@ -1,15 +1,16 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/conversation/datasource/models/message.dart';
 import 'package:chat_app/features/conversation/presentation/bloc/message_bloc.dart';
 import 'package:chat_app/features/widgets/circular_progress_indicator.dart';
 import 'package:chat_app/features/widgets/custom_snackbar.dart';
-import 'package:chat_app/shared/shared.dart';
 import 'package:chat_app/theme/color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
@@ -36,8 +37,7 @@ class ConversationScreen extends StatefulWidget {
 
 class _ConversationScreenState extends State<ConversationScreen> {
   late TextEditingController _textEditingController;
-  late IO.Socket _socket;
-  late String token;
+  late io.Socket _socket;
   late Message _message;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -47,42 +47,50 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   void initState() {
     super.initState();
-    token = SharedData.token ?? '';
     _textEditingController = TextEditingController();
-    if (token.isNotEmpty) {
-      context.read<MessageBloc>().add(
-            GetMessageRequest(
-              conversationId: widget.conversationId,
-              token: token,
-            ),
-          );
-    }
+    context.read<MessageBloc>().add(
+          GetMessageRequest(
+            conversationId: widget.conversationId,
+          ),
+        );
     _socketConnect();
   }
 
+  //socket
   void _socketConnect() {
-    _socket = IO.io(
-        'http://192.168.0.100:3000',
-        IO.OptionBuilder()
+    _socket = io.io(
+        dotenv.env['BASE_URL'],
+        io.OptionBuilder()
             .setTransports(['websocket'])
             .disableAutoConnect()
-            .setExtraHeaders(
-                {'Authorization': 'Bearer $token'}) // Include token
             .build());
     _socket.connect();
+    _setupSocketListeners();
+  }
 
-    _socket.onConnect((data) {
+  //socket listener for new message
+  void _setupSocketListeners() {
+    log('socket called');
+    _socket.onConnect((so) {
+      log(so.toString());
       _socket.on("new_message", (data) {
-        _message = Message.fromJson(jsonDecode(jsonEncode(data['data'])));
-        context.read<MessageBloc>().add(NewMessageReceived(_message));
+        log(data.toString());
+        _handleNewMessage(data);
       });
     });
 
+    //socket on connection error
     _socket.onConnectError((err) {
-      _socket.disconnect();
-      _socket.dispose();
-      return;
+      log(err.toString());
+      // _socket.disconnect();
+      // _socket.dispose();
     });
+  }
+
+  //handle new message
+  void _handleNewMessage(dynamic data) {
+    _message = Message.fromJson(jsonDecode(jsonEncode(data['data'])));
+    context.read<MessageBloc>().add(NewMessageReceived(_message));
   }
 
   @override
@@ -93,6 +101,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     super.dispose();
   }
 
+  //send message process
   void _sendMessage() {
     if (_formKey.currentState?.validate() ?? false) {
       Map<String, dynamic> message = {
@@ -101,11 +110,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
         'receiver': widget.friendUser.sId
       };
       context.read<SendBloc>().add(SendMessageRequest(
-          message: message,
-          conversationId: widget.conversationId,
-          token: token));
-      _textEditingController.clear(); // Clear input after sending
-      setState(() {}); // Refresh UI to disable the send button
+            message: message,
+            conversationId: widget.conversationId,
+          ));
+      _textEditingController
+          .clear(); // Clear input after sending// Refresh UI to disable the send button
     }
   }
 
@@ -114,40 +123,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 10,
-        title: Row(
-          children: [
-            CircleAvatar(
-              // If you want to show a profile picture, replace this placeholder.
-              backgroundColor: Colors.grey[300],
-              child: Icon(Icons.person, color: Colors.black),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              widget.friendUser.fullName ?? " ",
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontSize: 20, color: Theme.of(context).colorScheme.onSurface),
-            ),
-          ],
-        ),
-        actions: [
-          InkWell(
-              onTap: () {
-                CustomSnackbar.show(
-                    context: context, message: "It's will update later");
-              },
-              child: Icon(FontAwesomeIcons.phone)),
-          SizedBox(width: 20),
-          InkWell(
-              onTap: () {
-                CustomSnackbar.show(
-                    context: context, message: "It's will update later");
-              },
-              child: Icon(FontAwesomeIcons.video)),
-          SizedBox(width: 20),
-        ],
-      ),
+      appBar: _buildAppBar(context),
       backgroundColor: isDark ? const Color(0xff152033) : Colors.white,
       body: SafeArea(
         child: Column(
@@ -233,6 +209,107 @@ class _ConversationScreenState extends State<ConversationScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      elevation: 10,
+      title: InkWell(
+        onTap: () {
+          widget.friendUser.profilePic != null &&
+                  widget.friendUser.profilePic!.isNotEmpty
+              ? _showProfilePic(widget.friendUser.profilePic!,
+                  widget.friendUser.fullName!, widget.friendUser.email!)
+              : null;
+        },
+        child: Row(
+          children: [
+            CircleAvatar(
+                backgroundImage: widget.friendUser.profilePic != null &&
+                        widget.friendUser.profilePic!.isNotEmpty
+                    ? NetworkImage(widget.friendUser.profilePic!)
+                    : widget.friendUser.gender == 'female'
+                        ? AssetImage('assets/images/female.jpg')
+                        : AssetImage('assets/images/man.jpg')),
+            const SizedBox(width: 6),
+            Text(
+              widget.friendUser.fullName ?? " ",
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        _buildAppBarAction(FontAwesomeIcons.phone, "It's will update later"),
+        const SizedBox(
+          width: 20,
+        ),
+        _buildAppBarAction(FontAwesomeIcons.video, "It's will update later"),
+        const SizedBox(
+          width: 20,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAppBarAction(IconData icon, String message) {
+    return InkWell(
+      onTap: () => CustomSnackbar.show(context: context, message: message),
+      child: Icon(icon),
+    );
+  }
+
+  //show the profile pic of the friend and his/her name and email
+  void _showProfilePic(String profilePicUrl, String fullName, String mail) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: 300,
+                width: 300,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  ),
+                  image: DecorationImage(
+                    image: NetworkImage(profilePicUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Text(
+                fullName,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontSize: 20,
+                    color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                mail,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

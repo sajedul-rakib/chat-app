@@ -6,7 +6,6 @@ import 'package:chat_app/features/signup/presentation/widget/text_form_field.dar
 import 'package:chat_app/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../search_user_bloc/search_user_bloc.dart';
@@ -25,7 +24,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   late TextEditingController _friendGmailETController;
   late bool _openSearchInput;
   late bool _openSearchBox;
-  late io.Socket _socket;
   late SocketRepository _socketRepository;
 
   String token = SharedData.token ?? '';

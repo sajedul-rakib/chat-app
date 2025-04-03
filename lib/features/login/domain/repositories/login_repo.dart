@@ -1,14 +1,17 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chat_app/apis/api_endpoints.dart';
 import 'package:chat_app/apis/api_service.dart';
+import 'package:chat_app/apis/model/response_model.dart';
 import 'package:chat_app/shared/shared.dart';
 
 import '../../data/repositories/login_repository.dart';
 
 class LoginRepo extends LogInRepository {
   @override
-  Future<bool> signIn({required String email, required String password}) async {
+  Future<ResponseModel> signIn(
+      {required String email, required String password}) async {
     try {
       final response = await ApiService.callApiWithPostMethod(
           url: ApiEndPoints.signIn,
@@ -16,15 +19,15 @@ class LoginRepo extends LogInRepository {
 
       if (response.status == 200) {
         //save user token
-        SharedData.saveToLocal("token", response.body['token']);
-        SharedData.saveToLocal("userId", response.body['id']);
-        return true;
+        SharedData.saveToLocal("token", response.body?['token']);
+        SharedData.saveToLocal("userId", response.body?['id']);
+        return response;
       } else {
-        return false;
+        return response;
       }
     } catch (err) {
-      log(err.toString());
-      rethrow;
+      return ResponseModel(
+          status: 500, errMsg: jsonDecode('{errors: {common: {msg: $err}}}'));
     }
   }
 
@@ -46,6 +49,6 @@ class LoginRepo extends LogInRepository {
 
   @override
   Future<bool> logOut() async {
-   return SharedData.deleteAllSave();
+    return SharedData.deleteAllSave();
   }
 }

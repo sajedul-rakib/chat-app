@@ -1,6 +1,7 @@
-import 'dart:developer';
+
 
 import 'package:bloc/bloc.dart';
+import 'package:chat_app/common/model/errorModel.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/repositories/login_repo.dart';
@@ -21,15 +22,18 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       try {
         final response = await _loginRepo.signIn(
             email: event.email, password: event.password);
-        if (response) {
+
+        // log(response.body.toString());
+
+        if (response.status == 200) {
           emit(SignInSuccess());
         } else {
-          emit(SignInFailure(errorMessage: "Log in Failed"));
+          String errMsg =
+              ErrorModel.fromJson(response.errMsg!).errors?.errMsg?.msg ?? '';
+          emit(SignInFailure(errorMessage: errMsg));
         }
       } catch (e) {
         emit(SignInFailure(errorMessage: e.toString()));
-        log('from signIn bloc:${e.toString()}');
-        rethrow;
       }
     });
     //log out handler

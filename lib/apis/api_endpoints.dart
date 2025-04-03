@@ -26,4 +26,8 @@ class ApiEndPoints {
 
   //search user
   static String search = '$baseUrl/search';
+
+  // get authenticate user detail
+  static String userDetail = '$baseUrl/user-detail';
+
 }

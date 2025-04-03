@@ -16,7 +16,7 @@ class CustomSnackbar {
               .textTheme
               .bodyLarge!
               .copyWith(color: Theme.of(context).colorScheme.onSecondary)),
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 3),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

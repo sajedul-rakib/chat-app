@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../router/route_name.dart';
 import '../../../contacts/presentation/widgets/friend_list_tile.dart';
 import '../../../widgets/circular_progress_indicator.dart';
+import '../../../widgets/custom_snackbar.dart';
 import '../bloc/bloc/get_friend_list_bloc.dart';
 import 'no_friend_ui.dart';
 
@@ -17,9 +18,13 @@ class FriendListUi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetFriendListBloc, GetFriendListState>(
+    return BlocConsumer<GetFriendListBloc, GetFriendListState>(
         builder: (context, state) {
-      if (state is GetFriendListSuccess) {
+      if (state is GetFriendListLoading) {
+        return Center(
+          child: CustomCircularProgressIndicator(),
+        );
+      } else if (state is GetFriendListSuccess) {
         return state.friendList.conversation!.isNotEmpty
             ? ListView.separated(
                 physics: const ScrollPhysics(),
@@ -65,13 +70,15 @@ class FriendListUi extends StatelessWidget {
                 },
               )
             : NoFriendUi(friendGmailETController: _friendGmailETController);
-      }
-      if (state is GetFriendListLoading) {
-        return Center(
-          child: CustomCircularProgressIndicator(),
-        );
       } else {
         return SizedBox.shrink();
+      }
+    }, listener: (context, state) {
+      if (state is GetFriendListFailure) {
+        CustomSnackbar.show(
+            context: context,
+            message: state.errMsg ?? "",
+            backgroundColor: Theme.of(context).colorScheme.error);
       }
     });
   }

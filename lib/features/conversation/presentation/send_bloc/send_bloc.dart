@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
+import 'package:chat_app/shared/shared.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -16,8 +17,9 @@ class SendBloc extends Bloc<SendEvent, SendState> {
     on<SendMessageRequest>((event, emit) async {
       emit(SendMessageStateLoading());
       try {
+        final String token =await SharedData.getLocalSaveItem("token") ?? '';
         bool result = await _messageRepositories.sendMessage(
-            event.message, event.conversationId, event.token);
+            event.message, event.conversationId, token);
         if (result) {
           emit(SendMessageStateSuccess());
         } else {

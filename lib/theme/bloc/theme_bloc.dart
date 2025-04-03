@@ -11,6 +11,7 @@ part 'theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc() : super(const ThemeState.system()) {
+
     on<InitialTheme>((event, emit) async {
       String? themeMode = await ThemeShared.getTheme();
       if (themeMode != null) {

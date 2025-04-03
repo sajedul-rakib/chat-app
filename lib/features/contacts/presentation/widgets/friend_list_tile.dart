@@ -17,17 +17,18 @@ class FriendListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log(jsonEncode(user.toJson()));
     return ListTile(
       onTap: onPressed,
       leading: Stack(
         alignment: AlignmentDirectional.topEnd,
         children: [
-          user.profilePic != null && user.profilePic!.isNotEmpty
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.network(user.profilePic!))
-              : Image.asset('assets/images/user.png'),
+          CircleAvatar(
+              backgroundImage:
+                  user.profilePic != null && user.profilePic!.isNotEmpty
+                      ? NetworkImage(user.profilePic!)
+                      : user.gender == 'female'
+                          ? AssetImage('assets/images/female.jpg')
+                          : AssetImage('assets/images/man.jpg')),
           Container(
             width: 17,
             height: 17,

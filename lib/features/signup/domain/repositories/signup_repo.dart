@@ -1,30 +1,34 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:chat_app/apis/api_endpoints.dart';
 import 'package:chat_app/apis/api_service.dart';
+import 'package:chat_app/apis/model/response_model.dart';
 import 'package:chat_app/features/signup/data/models/user.dart';
 
 import '../../data/repositories/signup_repository.dart';
 
 class SignupRepo implements SignupRepository {
   @override
-  Future<bool> signUp(
+  Future<ResponseModel> signUp(
       {required MyUser user,
       required String password,
-     }) async {
+      required File? profilePic}) async {
     try {
-      final signUp = await ApiService.callApiWithPostMethod(
+      final signUp = await ApiService.callApiWithMultiPartPostRequest(
           url: ApiEndPoints.signUp,
-          body: {...user.toEntity().toDocument(), 'password': password});
-      log(signUp.body.toString());
+          body: {...user.toEntity().toDocument(), 'password': password},
+          imagePath: profilePic);
       if (signUp.status == 200) {
-        return true;
+        return signUp;
       } else {
-        return false;
+        return signUp;
       }
     } catch (err) {
-      log(err.toString());
-      return false;
+      return ResponseModel(status: 500, errMsg: {
+        'errMsg': {
+          'common': {'msg': "Sign up failed"}
+        }
+      });
     }
   }
 }

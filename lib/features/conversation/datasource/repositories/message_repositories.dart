@@ -2,21 +2,20 @@ import 'dart:developer';
 
 import 'package:chat_app/apis/api_endpoints.dart';
 import 'package:chat_app/apis/api_service.dart';
-import 'package:chat_app/features/conversation/datasource/models/message.dart';
+import 'package:chat_app/apis/model/response_model.dart';
 import 'package:chat_app/features/conversation/datasource/models/message_model.dart';
 import 'package:chat_app/features/conversation/domain/repositories/message_repo.dart';
 
 class MessageRepositories extends MessageRepo {
   @override
-  Future<MessageModel> getMessage(
+  Future<ResponseModel> getMessage(
       {required String conversationId, required String token}) async {
     try {
       final response = await ApiService.callApiWithGetMethod(
           url: ApiEndPoints.getMessage(conversationId), token: token);
-      return MessageModel.fromJson(response.body);
+      return response;
     } catch (err) {
-      log('error from message repo: $err');
-      rethrow;
+      return ResponseModel(status: 500,errMsg: {'errMsg':err});
     }
   }
 

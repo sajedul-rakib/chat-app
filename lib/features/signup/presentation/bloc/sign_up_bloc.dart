@@ -1,6 +1,8 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:chat_app/apis/model/response_model.dart';
+import 'package:chat_app/common/model/errorModel.dart';
 import 'package:chat_app/features/signup/domain/repositories/signup_repo.dart';
 import 'package:equatable/equatable.dart';
 
@@ -19,13 +21,20 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<SignUpRequired>((event, emit) async {
       try {
         emit(SignUpProcess());
-        bool isSuccess = await _signupRepo.signUp(
-            user: event.user, password: event.password);
-        emit(SignUpSuccess(isSuccess: isSuccess));
+        ResponseModel response = await _signupRepo.signUp(
+            user: event.user,
+            password: event.password,
+            profilePic: event.profilePic);
+
+        if (response.status == 200) {
+          emit(SignUpSuccess());
+        } else {
+          String errMsg =
+              ErrorModel.fromJson(response.errMsg!).errors?.errMsg?.msg ?? '';
+          emit(SignUpFailure(errorMessage: errMsg));
+        }
       } catch (e) {
-        log('from sign up bloc : ${e.toString()}');
         emit(SignUpFailure(errorMessage: e.toString()));
-        rethrow;
       }
     });
   }

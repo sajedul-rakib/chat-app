@@ -12,8 +12,8 @@ final class SignUpInitial extends SignUpState {}
 final class SignUpProcess extends SignUpState {}
 
 final class SignUpSuccess extends SignUpState {
-  final bool isSuccess;
-  const SignUpSuccess({required this.isSuccess});
+
+  const SignUpSuccess();
 }
 
 final class SignUpFailure extends SignUpState {

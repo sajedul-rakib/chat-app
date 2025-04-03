@@ -5,13 +5,12 @@ abstract class MessageEvent {}
 
 final class GetMessageRequest extends MessageEvent {
   final String conversationId;
-  final String token;
 
-  GetMessageRequest({required this.conversationId, required this.token});
+  GetMessageRequest({required this.conversationId});
 }
-
 
 class NewMessageReceived extends MessageEvent {
   final Message message;
+
   NewMessageReceived(this.message);
 }

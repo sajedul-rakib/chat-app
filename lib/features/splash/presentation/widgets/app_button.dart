@@ -16,7 +16,8 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(backgroundColor: backgroundColor),
+      style:
+          ButtonStyle(backgroundColor: WidgetStatePropertyAll(backgroundColor)),
       onPressed: onPressed,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -35,7 +36,11 @@ class AppButton extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-            if (iconData != null) Icon(iconData),
+            if (iconData != null)
+              Icon(
+                iconData,
+                color: Colors.white,
+              ),
           ],
         ),
       ),

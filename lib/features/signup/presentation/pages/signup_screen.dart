@@ -68,23 +68,18 @@ class _SignInScreenState extends State<SignInScreen> {
                   _emailETController.clear();
                   _passwordETController.clear();
                   _nameETController.clear();
-                  state.isSuccess
-                      ? {
-                          CustomSnackbar.show(
-                              context: context,
-                              message: "Sign up successful",
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.secondary)
-                        }
-                      : CustomSnackbar.show(
-                          context: context,
-                          message: "Sign up failed",
-                          backgroundColor: Theme.of(context).colorScheme.error);
-                  Navigator.pushReplacementNamed(context,RouteName.logInScreen);
+                  CustomSnackbar.show(
+                      context: context,
+                      message: "Sign up successful",
+                      backgroundColor: Theme.of(context).colorScheme.secondary);
+                  Navigator.pushReplacementNamed(
+                      context, RouteName.logInScreen);
                 }
                 if (state is SignUpFailure) {
-                  log(state.errorMessage);
-                  // CustomSnackBar.customSnackBar(context, state.errorMessage);
+                  CustomSnackbar.show(
+                      context: context,
+                      message: state.errorMessage,
+                      backgroundColor: Theme.of(context).colorScheme.error);
                 }
               },
               builder: (context, state) {
@@ -188,13 +183,14 @@ class _SignInScreenState extends State<SignInScreen> {
                                             gender: _gender);
 
                                         // log(_emailETController.text);
-                                        context
-                                            .read<SignUpBloc>()
-                                            .add(SignUpRequired(
-                                              user: createUser,
-                                              password:
-                                                  _passwordETController.text,
-                                            ));
+                                        context.read<SignUpBloc>().add(
+                                            SignUpRequired(
+                                                user: createUser,
+                                                password:
+                                                    _passwordETController.text,
+                                                profilePic: profilePic != null
+                                                    ? File(profilePic!.path)
+                                                    : null));
                                       }
                                     },
                                   ),
