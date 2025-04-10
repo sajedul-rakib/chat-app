@@ -11,14 +11,19 @@ import '../../data/repositories/login_repository.dart';
 class LoginRepo extends LogInRepository {
   @override
   Future<ResponseModel> signIn(
-      {required String email, required String password}) async {
+      {required String email,
+      required String password,
+      String fcmToken = ''}) async {
     try {
       final response = await ApiService.callApiWithPostMethod(
           url: ApiEndPoints.signIn,
-          body: {"email": email, 'password': password});
+          body: {
+            "email": email,
+            'password': password,
+            'fcmToken': fcmToken
+          });
 
       if (response.status == 200) {
-        //save user token
         SharedData.saveToLocal("token", response.body?['token']);
         SharedData.saveToLocal("userId", response.body?['id']);
         return response;
@@ -35,7 +40,6 @@ class LoginRepo extends LogInRepository {
   Future<String> checkUserLoggedIn() async {
     try {
       String getToken = await SharedData.getLocalSaveItem('token') ?? '';
-
       if (getToken.isNotEmpty) {
         return getToken;
       } else {

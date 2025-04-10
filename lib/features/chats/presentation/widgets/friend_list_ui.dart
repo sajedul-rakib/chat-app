@@ -1,3 +1,4 @@
+import 'package:chat_app/features/splash/presentation/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +28,7 @@ class FriendListUi extends StatelessWidget {
       } else if (state is GetFriendListSuccess) {
         return state.friendList.conversation!.isNotEmpty
             ? ListView.separated(
-                physics: const ScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: state.friendList.conversation!.length,
                 itemBuilder: (_, index) {
@@ -70,6 +71,24 @@ class FriendListUi extends StatelessWidget {
                 },
               )
             : NoFriendUi(friendGmailETController: _friendGmailETController);
+      } else if (state is GetFriendListFailure) {
+        return SizedBox(
+          width: 200,
+          child: Center(
+              child: Column(
+            children: [
+              const SizedBox(
+                height: 300,
+              ),
+              AppButton(
+                buttonTitle: "Retry",
+                onPressed: () {
+                  context.read<GetFriendListBloc>().add(GetFriendListRequested());
+                },
+              ),
+            ],
+          )),
+        );
       } else {
         return SizedBox.shrink();
       }

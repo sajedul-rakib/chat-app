@@ -1,6 +1,7 @@
 import 'package:chat_app/features/chats/data/repositories/chat_repositories.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
 import 'package:chat_app/features/profile/domain/repositories/profile_repository.dart';
+import 'package:chat_app/services/notification/local_notification.dart';
 import 'package:chat_app/shared/shared.dart';
 import 'package:chat_app/simple_bloc_observer.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,15 +21,17 @@ void main() async {
 
   // load the env file which contain various data
   await Firebase.initializeApp();
+  await FlutterNotification.instance.initialize();
   await dotenv.load(fileName: ".env");
   await SharedData.init();
-  bool checkIsFirstOpen = await SharedData.checkIsFirstOpen();
-  SharedData.setIsFirstOpen();
+  String checkIsFirstOpen =
+      await SharedData.getLocalSaveItem("isFirst") ?? 'yes';
+  SharedData.saveToLocal('isFirst', 'no');
   runApp(MainApp(
       signupRepo: SignupRepo(),
       loginRepo: LoginRepo(),
       chatRepo: ChatRepositories(),
       profileRepo: ProfileRepository(),
       messageRepositories: MessageRepositories(),
-      checkIsFirstOpen: checkIsFirstOpen));
+      checkIsFirstOpen: checkIsFirstOpen == 'yes' ? true : false));
 }

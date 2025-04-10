@@ -23,21 +23,21 @@ class MessageBox extends StatelessWidget {
               ? ColorSchemed.lightColorScheme.tertiary.withValues(alpha: 7)
               : Theme.of(context).colorScheme.primary.withValues(alpha: .6)
           : Theme.of(context).colorScheme.secondary,
-      elevation: 0,
+      elevation:bubbleType==BubbleType.receiverBubble? 2: 0,
       clipper: ChatBubbleClipper5(type: bubbleType),
       padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
+        if(message.messageType == 'text')  Text(
             message.msg ?? '',
             style: Theme.of(context).textTheme.displaySmall!.copyWith(
                   fontSize: 18,
                   color: bubbleType != BubbleType.sendBubble
                       ? Theme.of(context).colorScheme.onPrimary
                       : Theme.of(context).colorScheme.onSecondary,
-                ),
+                ),textAlign: TextAlign.justify,
           ),
           const SizedBox(
             height: 5,
@@ -53,6 +53,8 @@ class MessageBox extends StatelessWidget {
             ),
           if (bubbleType == BubbleType.sendBubble)
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   '${timeago.format(DateTime.parse(message.createdAt ?? DateTime.now().toString()))} . ',

@@ -1,7 +1,7 @@
-
-
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/common/model/errorModel.dart';
+import 'package:chat_app/services/notification/local_notification.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/repositories/login_repo.dart';
@@ -20,11 +20,10 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInRequired>((event, emit) async {
       emit(SignInProccess());
       try {
+        final String fcmToken =
+            Platform.isIOS ? "" : FlutterNotification.fcmToken ?? '';
         final response = await _loginRepo.signIn(
-            email: event.email, password: event.password);
-
-        // log(response.body.toString());
-
+            email: event.email, password: event.password, fcmToken: fcmToken);
         if (response.status == 200) {
           emit(SignInSuccess());
         } else {

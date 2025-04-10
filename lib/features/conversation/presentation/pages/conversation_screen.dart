@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/conversation/datasource/models/message.dart';
@@ -62,7 +61,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
         dotenv.env['BASE_URL'],
         io.OptionBuilder()
             .setTransports(['websocket'])
-            .disableAutoConnect()
+            .enableAutoConnect()
+            .enableReconnection()
             .build());
     _socket.connect();
     _setupSocketListeners();
@@ -70,20 +70,29 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   //socket listener for new message
   void _setupSocketListeners() {
-    log('socket called');
-    _socket.onConnect((so) {
-      log(so.toString());
-      _socket.on("new_message", (data) {
-        log(data.toString());
-        _handleNewMessage(data);
-      });
+    //on connect
+    _socket.onConnect((_) {});
+
+    _socket.emit("join_chat", {
+      'conversationId': widget.conversationId,
+      'userId': widget.loggedUserId
+    });
+
+    //listening new message
+    _socket.on("new_message", (data) {
+      _handleNewMessage(data);
     });
 
     //socket on connection error
     _socket.onConnectError((err) {
-      log(err.toString());
-      // _socket.disconnect();
-      // _socket.dispose();
+      _socket.disconnect();
+      _socket.dispose();
+    });
+
+    //socket error
+    _socket.onError((_) {
+      _socket.disconnect();
+      _socket.dispose();
     });
   }
 
@@ -95,6 +104,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   void dispose() {
+    _socket.emit("leave_chat", {'userId': widget.loggedUserId});
     _socket.disconnect();
     _socket.dispose();
     _textEditingController.dispose();
@@ -103,7 +113,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   //send message process
   void _sendMessage() {
-    if (_formKey.currentState?.validate() ?? false) {
+    if (!isMessageEmpty) {
       Map<String, dynamic> message = {
         'sender': widget.loggedUserId,
         'msg': _textEditingController.text.trim(),
@@ -113,8 +123,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
             message: message,
             conversationId: widget.conversationId,
           ));
-      _textEditingController
-          .clear(); // Clear input after sending// Refresh UI to disable the send button
+      _textEditingController.clear(); // Clear input after sending
+      // Refresh UI to disable the send button
+      setState(() {});
     }
   }
 
@@ -148,15 +159,24 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: sender
                                   ? MainAxisAlignment.end
                                   : MainAxisAlignment.start,
                               children: [
-                                MessageBox(
-                                  bubbleType: sender
-                                      ? BubbleType.sendBubble
-                                      : BubbleType.receiverBubble,
-                                  message: message!,
+                                IntrinsicWidth(
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                0.75),
+                                    child: MessageBox(
+                                      bubbleType: sender
+                                          ? BubbleType.sendBubble
+                                          : BubbleType.receiverBubble,
+                                      message: message!,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -178,32 +198,61 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ),
             Container(
               padding: const EdgeInsets.all(10),
-              child: Form(
-                key: _formKey,
-                child: InputFormField(
-                  filledInput: Theme.of(context).brightness == Brightness.dark
-                      ? true
-                      : false,
-                  filledColor: Theme.of(context).brightness == Brightness.dark
-                      ? ColorSchemed.darkColorScheme.primary
-                      : ColorSchemed.lightColorScheme.tertiary
-                          .withValues(alpha: 10),
-                  hintText: "Message",
-                  textEditionController: _textEditingController,
-                  onChange: (value) => setState(() {}),
-                  prefix: const Icon(CupertinoIcons.mail),
-                  suffix: isMessageEmpty
-                      ? InkWell(
-                          onTap: () {
-                            CustomSnackbar.show(
-                                context: context, message: "Update will later");
-                          },
-                          child: Icon(CupertinoIcons.mic_fill))
-                      : InkWell(
+              child: Row(
+                spacing: 10,
+                children: [
+                  Expanded(
+                    flex: 9,
+                    child: Form(
+                      key: _formKey,
+                      child: InputFormField(
+                        filledInput:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? true
+                                : false,
+                        filledColor:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? ColorSchemed.darkColorScheme.primary
+                                : ColorSchemed.lightColorScheme.tertiary
+                                    .withValues(alpha: 10),
+                        hintText: "Message",
+                        textEditionController: _textEditingController,
+                        onChange: (value) => setState(() {}),
+                        prefix: const Icon(CupertinoIcons.mail),
+                        suffix: InkWell(
                           onTap: _sendMessage,
                           child: const Icon(CupertinoIcons.paperplane_fill),
                         ),
-                ),
+                      ),
+                    ),
+                  ),
+                  if (isMessageEmpty)
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              flex: 1,
+                              child: InkWell(
+                                  onTap: () {
+                                    CustomSnackbar.show(
+                                        context: context,
+                                        message: "It's will update later");
+                                  },
+                                  child: Icon(FontAwesomeIcons.microphone))),
+                          Expanded(
+                              flex: 1,
+                              child: InkWell(
+                                  onTap: () {
+                                    CustomSnackbar.show(
+                                        context: context,
+                                        message: "It's will update later");
+                                  },
+                                  child: Icon(FontAwesomeIcons.image))),
+                        ],
+                      ),
+                    )
+                ],
               ),
             ),
           ],
@@ -212,6 +261,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
+  //app bar
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 10,
@@ -219,8 +269,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
         onTap: () {
           widget.friendUser.profilePic != null &&
                   widget.friendUser.profilePic!.isNotEmpty
-              ? _showProfilePic(widget.friendUser.profilePic!,
-                  widget.friendUser.fullName!, widget.friendUser.email!)
+              ? _showProfilePic(
+                  '${dotenv.env['BASE_URL']}${widget.friendUser.profilePic!}',
+                  widget.friendUser.fullName!,
+                  widget.friendUser.email!)
               : null;
         },
         child: Row(
@@ -228,7 +280,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
             CircleAvatar(
                 backgroundImage: widget.friendUser.profilePic != null &&
                         widget.friendUser.profilePic!.isNotEmpty
-                    ? NetworkImage(widget.friendUser.profilePic!)
+                    ? NetworkImage(
+                        '${dotenv.env['BASE_URL']}${widget.friendUser.profilePic!}')
                     : widget.friendUser.gender == 'female'
                         ? AssetImage('assets/images/female.jpg')
                         : AssetImage('assets/images/man.jpg')),

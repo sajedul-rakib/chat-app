@@ -1,3 +1,4 @@
+
 import 'package:chat_app/features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
@@ -15,6 +16,7 @@ import 'package:chat_app/features/signup/presentation/pages/signup_screen.dart';
 import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/features/splash/presentation/page/splash_screen.dart';
 import 'package:chat_app/router/route_name.dart';
+import 'package:chat_app/services/notification/local_notification.dart';
 import 'package:chat_app/theme/bloc/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

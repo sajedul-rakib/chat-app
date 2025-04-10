@@ -1,11 +1,18 @@
 part of 'search_user_bloc.dart';
 
 @immutable
-abstract class SearchUserEvent {}
+abstract class SearchUserEvent {
+  const SearchUserEvent();
+}
 
 final class SearchFriendRequestRequired extends SearchUserEvent {
-  final String token;
   final String keyword;
 
-  SearchFriendRequestRequired({required this.token, required this.keyword});
+  const SearchFriendRequestRequired({required this.keyword});
 }
+
+
+final class SearchUserReset extends SearchUserEvent{
+  const SearchUserReset();
+}
+

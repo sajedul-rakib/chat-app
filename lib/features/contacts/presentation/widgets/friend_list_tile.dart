@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FriendListTile extends StatelessWidget {
   const FriendListTile(
@@ -23,12 +21,12 @@ class FriendListTile extends StatelessWidget {
         alignment: AlignmentDirectional.topEnd,
         children: [
           CircleAvatar(
-              backgroundImage:
-                  user.profilePic != null && user.profilePic!.isNotEmpty
-                      ? NetworkImage(user.profilePic!)
-                      : user.gender == 'female'
-                          ? AssetImage('assets/images/female.jpg')
-                          : AssetImage('assets/images/man.jpg')),
+              backgroundImage: user.profilePic != null &&
+                      user.profilePic!.isNotEmpty
+                  ? NetworkImage('${dotenv.env['BASE_URL']}${user.profilePic!}')
+                  : user.gender == 'female'
+                      ? AssetImage('assets/images/female.jpg')
+                      : AssetImage('assets/images/man.jpg')),
           Container(
             width: 17,
             height: 17,
@@ -45,7 +43,15 @@ class FriendListTile extends StatelessWidget {
         ],
       ),
       title: Text(user.fullName ?? ''),
-      subtitle: Text(lastMessage ?? ""),
+      subtitle: Text(
+        lastMessage ?? "",
+        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 }

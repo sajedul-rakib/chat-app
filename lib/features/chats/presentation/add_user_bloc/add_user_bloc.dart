@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
+import 'package:chat_app/shared/shared.dart';
 import 'package:meta/meta.dart';
 
 import '../../data/models/Conversation.dart';
@@ -19,8 +22,10 @@ class AddUserBloc extends Bloc<AddUserEvent, AddUserState> {
     on<AddFriendRequestRequired>((event, emit) async {
       emit(AddFriendLoading());
       try {
+        String token=await SharedData.getLocalSaveItem("token") ?? '';
         final result =
-            await _chatRepo.addFriend(event.token, event.friend.toJson());
+            await _chatRepo.addFriend(token, event.friend.toJson());
+
         if (result.status == 200) {
           if (state is GetFriendListSuccess) {
             final prevFriendState = state as GetFriendListSuccess;

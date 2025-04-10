@@ -7,8 +7,7 @@ sealed class AddUserEvent {}
 
 
 final class AddFriendRequestRequired extends AddUserEvent {
-  final String token;
   final User friend;
 
-   AddFriendRequestRequired({required this.token, required this.friend});
+   AddFriendRequestRequired({required this.friend});
 }

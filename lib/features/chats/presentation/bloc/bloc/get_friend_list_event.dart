@@ -8,7 +8,5 @@ abstract class GetFriendListEvent extends Equatable {
 }
 
 final class GetFriendListRequested extends GetFriendListEvent {
-  final String token;
-
-  const GetFriendListRequested({required this.token});
+  const GetFriendListRequested();
 }

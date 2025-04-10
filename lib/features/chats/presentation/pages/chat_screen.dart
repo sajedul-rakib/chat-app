@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:chat_app/features/chats/presentation/bloc/bloc/get_friend_list_bloc.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/socket_repository.dart';
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
-import 'package:chat_app/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,17 +25,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   late bool _openSearchBox;
   late SocketRepository _socketRepository;
 
-  String token = SharedData.token ?? '';
-
   @override
   void initState() {
-    if (token.isNotEmpty) {
-      context
-          .read<GetFriendListBloc>()
-          .add(GetFriendListRequested(token: token));
-    }
+    context.read<GetFriendListBloc>().add(GetFriendListRequested());
+
     WidgetsBinding.instance.addObserver(this);
-    _socketRepository = SocketRepository(token);
+    _socketRepository = SocketRepository();
     _socketRepository.connect();
     _openSearchBox = true;
     _openSearchInput = false;
@@ -127,7 +121,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           //search result
           if (_openSearchBox)
             UserSearchResult(
-              token: token,
               textEditingController: _friendGmailETController,
             )
         ],
@@ -177,8 +170,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     setState(() {
                       _openSearchBox = true;
                     });
-                    context.read<SearchUserBloc>().add(
-                        SearchFriendRequestRequired(token: token, keyword: v));
+                    context
+                        .read<SearchUserBloc>()
+                        .add(SearchFriendRequestRequired(keyword: v));
                   }
                 },
               )

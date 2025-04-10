@@ -19,9 +19,10 @@ class GetFriendListBloc extends Bloc<GetFriendListEvent, GetFriendListState> {
       : _chatRepo = chatRepo,
         super(GetFriendListInitial()) {
     on<GetFriendListRequested>((event, emit) async {
+      emit(GetFriendListLoading());
       try {
-        emit(GetFriendListLoading());
-        ResponseModel result = await _chatRepo.getFriendList(event.token);
+        String token=await SharedData.getLocalSaveItem("token")?? '';
+        ResponseModel result = await _chatRepo.getFriendList(token);
         String userId = await SharedData.getLocalSaveItem("userId") ?? '';
         if (result.status == 200 && userId.isNotEmpty) {
           emit(GetFriendListSuccess(

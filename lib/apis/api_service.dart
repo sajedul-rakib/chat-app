@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
@@ -43,15 +42,36 @@ class ApiService {
           },
         );
       }
-    } on SocketException {
-      return ResponseModel(
-        status: 500,
-        errMsg: {
-          "errors": {
-            "common": {"msg": "No Internet Connection"}
-          }
-        },
-      );
+    } on SocketException catch (e) {
+      if (e.message.contains("Connection refused")) {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": "Server is unreachable"}
+            }
+          },
+        );
+      }
+      if (e.message.contains('Connection failed')) {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": "No Internet Connection"}
+            }
+          },
+        );
+      } else {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": e.message}
+            }
+          },
+        );
+      }
     } on HttpException {
       return ResponseModel(
         status: 500,
@@ -101,8 +121,6 @@ class ApiService {
 
       // Handle HTTP errors
       if (response.statusCode >= 400) {
-        log(response.statusCode.toString());
-
         return ResponseModel(
           status: response.statusCode,
           errMsg: {...jsonDecode(response.body)},
@@ -123,15 +141,36 @@ class ApiService {
           },
         );
       }
-    } on SocketException {
-      return ResponseModel(
-        status: 500,
-        errMsg: {
-          "errors": {
-            "common": {"msg": "No Internet Connection!"}
-          }
-        },
-      );
+    } on SocketException catch (e) {
+      if (e.message.contains("Connection refused")) {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": "Server is unreachable"}
+            }
+          },
+        );
+      }
+      if (e.message.contains('Connection failed')) {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": "No Internet Connection"}
+            }
+          },
+        );
+      } else {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": e.message}
+            }
+          },
+        );
+      }
     } on HttpException {
       return ResponseModel(
         status: 500,
@@ -150,8 +189,7 @@ class ApiService {
           }
         },
       );
-    } catch (e, stackTrace) {
-      log("Unexpected error: $e", stackTrace: stackTrace);
+    } catch (e) {
       return ResponseModel(
         status: 500,
         errMsg: {
@@ -202,8 +240,6 @@ class ApiService {
       // Read response body as a string
       final responseBody = await response.stream.bytesToString();
 
-      log(responseBody);
-
       // Handle HTTP errors
       if (response.statusCode >= 400) {
         return ResponseModel(
@@ -226,15 +262,36 @@ class ApiService {
           },
         );
       }
-    } on SocketException {
-      return ResponseModel(
-        status: 500,
-        errMsg: {
-          "errors": {
-            "common": {"msg": "No Internet Connection"}
-          }
-        },
-      );
+    } on SocketException catch (e) {
+      if (e.message.contains("Connection refused")) {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": "Server is unreachable"}
+            }
+          },
+        );
+      }
+      if (e.message.contains('Connection failed')) {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": "No Internet Connection"}
+            }
+          },
+        );
+      } else {
+        return ResponseModel(
+          status: 500,
+          errMsg: {
+            "errors": {
+              "common": {"msg": e.message}
+            }
+          },
+        );
+      }
     } on HttpException {
       return ResponseModel(
         status: 500,

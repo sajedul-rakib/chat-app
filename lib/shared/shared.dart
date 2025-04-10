@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedData {
@@ -21,17 +20,6 @@ class SharedData {
       throw Exception("SharedPreferences not initialized. Call SharedData.init() first.");
     }
     return _preferences!;
-  }
-
-  // Check if the app is opened for the first time
-  static Future<bool> checkIsFirstOpen() async {
-    return instance.getBool("isFirst") ?? true;
-  }
-
-  // Set the app as no longer first open
-  static Future<void> setIsFirstOpen() async {
-    bool result = await instance.setBool("isFirst", false);
-    log(result.toString());
   }
 
   // Save string to local storage

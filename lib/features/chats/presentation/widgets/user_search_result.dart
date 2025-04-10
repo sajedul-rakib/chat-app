@@ -1,6 +1,7 @@
 import 'package:chat_app/features/chats/presentation/add_user_bloc/add_user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../../../core/constants/colors/app_colors.dart';
 import '../../../splash/presentation/widgets/app_button.dart';
@@ -8,10 +9,8 @@ import '../../../widgets/circular_progress_indicator.dart';
 import '../search_user_bloc/search_user_bloc.dart';
 
 class UserSearchResult extends StatelessWidget {
-  const UserSearchResult(
-      {super.key, required this.token, required this.textEditingController});
+  const UserSearchResult({super.key, required this.textEditingController});
 
-  final String token;
   final TextEditingController textEditingController;
 
   @override
@@ -27,6 +26,12 @@ class UserSearchResult extends StatelessWidget {
             );
           }
           if (state is SearchFriendSuccess) {
+            Future.delayed(Duration(seconds: 5), () {
+              textEditingController.clear();
+              if (context.mounted) {
+                context.read<SearchUserBloc>().add(SearchUserReset());
+              }
+            });
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -47,28 +52,27 @@ class UserSearchResult extends StatelessWidget {
                                           spacing: 10,
                                           children: [
                                             CircleAvatar(
-                                              backgroundImage: state
-                                                              .searchResult
-                                                              .user?[index]
-                                                              .profilePic !=
-                                                          null &&
-                                                      state
-                                                          .searchResult
-                                                          .user![index]
-                                                          .profilePic!
-                                                          .isNotEmpty
-                                                  ? NetworkImage(state
-                                                      .searchResult
-                                                      .user![index]
-                                                      .profilePic!)
-                                                  : AssetImage(state
-                                                              .searchResult
-                                                              .user?[index]
-                                                              .gender ==
-                                                          'male'
-                                                      ? 'assets/images/man.jpg'
-                                                      : 'assets/images/female.jpg'),
-                                            ),
+                                                backgroundImage: state
+                                                                .searchResult
+                                                                .user?[index]
+                                                                .profilePic !=
+                                                            null &&
+                                                        state
+                                                            .searchResult
+                                                            .user![index]
+                                                            .profilePic!
+                                                            .isNotEmpty
+                                                    ? NetworkImage(
+                                                        '${dotenv.env['BASE_URL']}${state.searchResult.user?[index].profilePic!}')
+                                                    : state
+                                                                .searchResult
+                                                                .user?[index]
+                                                                .gender ==
+                                                            'female'
+                                                        ? AssetImage(
+                                                            'assets/images/female.jpg')
+                                                        : AssetImage(
+                                                            'assets/images/man.jpg')),
                                             Text(
                                               state.searchResult.user?[index]
                                                       .fullName ??
@@ -94,7 +98,6 @@ class UserSearchResult extends StatelessWidget {
                                           onPressed: () {
                                             context.read<AddUserBloc>().add(
                                                 AddFriendRequestRequired(
-                                                    token: token,
                                                     friend: state.searchResult
                                                         .user![index]));
                                           },
@@ -114,6 +117,12 @@ class UserSearchResult extends StatelessWidget {
             );
           }
           if (state is SearchFriendFailure) {
+            Future.delayed(Duration(seconds: 3), () {
+              textEditingController.clear();
+              if (context.mounted) {
+                context.read<SearchUserBloc>().add(SearchUserReset());
+              }
+            });
             return Text(state.errMsg.toString());
           }
           return SizedBox.shrink();
