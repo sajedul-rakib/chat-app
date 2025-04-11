@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 
 import '../../../data/models/Conversation.dart';
 import '../../../data/models/user.dart';
-import '../get_friend_list_bloc.dart';
+import '../get_user_bloc/get_friend_list_bloc.dart';
 
 part 'add_user_event.dart';
 

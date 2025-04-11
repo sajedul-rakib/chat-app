@@ -1,7 +1,7 @@
-
 import 'package:chat_app/features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
+import 'package:chat_app/features/chats/presentation/bloc/online_user_bloc/online_user_bloc.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
 import 'package:chat_app/features/conversation/presentation/bloc/message_bloc.dart';
 import 'package:chat_app/features/conversation/presentation/pages/conversation_screen.dart';
@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'features/chats/presentation/bloc/add_user_bloc/add_user_bloc.dart';
-import 'features/chats/presentation/bloc/get_friend_list_bloc.dart';
+import 'features/chats/presentation/bloc/get_user_bloc/get_friend_list_bloc.dart';
 import 'features/chats/presentation/bloc/search_user_bloc/search_user_bloc.dart';
 import 'features/login/domain/repositories/login_repo.dart';
 import 'features/login/presentation/bloc/sign_in_bloc.dart';
@@ -53,21 +53,12 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => SignInBloc(loginRepo: _loginRepo)),
-        BlocProvider(create: (_) => SignUpBloc(signUpRepo: _signupRepo)),
+        BlocProvider(create: (_) => ThemeBloc()..add(InitialTheme())),
         BlocProvider(
             create: (_) => AuthenticationBloc(loginRepo: _loginRepo)
               ..add(AuthenticationUserChanged())),
-        BlocProvider(create: (_) => GetFriendListBloc(chatRepo: _chatRepo)),
-        BlocProvider(
-            create: (_) =>
-                MessageBloc(messageRepositories: _messageRepositories)),
-        BlocProvider(
-            create: (_) => SendBloc(messageRepositories: _messageRepositories)),
-        BlocProvider(create: (_) => SearchUserBloc(chatRepo: _chatRepo)),
-        BlocProvider(create: (_) => AddUserBloc(chatRepo: _chatRepo)),
-        BlocProvider(create: (_) => ProfileBloc(profileRepo: _profileRepo)),
-        BlocProvider(create: (_) => ThemeBloc()..add(InitialTheme())),
+        BlocProvider(create: (_) => SignInBloc(loginRepo: _loginRepo)),
+        BlocProvider(create: (_) => SignUpBloc(signUpRepo: _signupRepo)),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
@@ -100,7 +91,32 @@ class MainApp extends StatelessWidget {
                 : BlocBuilder<AuthenticationBloc, AuthenticationState>(
                     builder: (context, state) {
                       if (state.status == AuthenticateStatus.authenticate) {
-                        return BottomNavBar();
+                        return MultiBlocProvider(
+                          providers: [
+                            BlocProvider(
+                                create: (_) =>
+                                    GetFriendListBloc(chatRepo: _chatRepo)),
+                            BlocProvider(
+                                create: (_) =>
+                                    OnlineUserBloc()..add(ConnectToSocket())),
+                            BlocProvider(
+                                create: (_) => MessageBloc(
+                                    messageRepositories: _messageRepositories)),
+                            BlocProvider(
+                                create: (_) => SendBloc(
+                                    messageRepositories: _messageRepositories)),
+                            BlocProvider(
+                                create: (_) =>
+                                    SearchUserBloc(chatRepo: _chatRepo)),
+                            BlocProvider(
+                                create: (_) =>
+                                    AddUserBloc(chatRepo: _chatRepo)),
+                            BlocProvider(
+                                create: (_) =>
+                                    ProfileBloc(profileRepo: _profileRepo)),
+                          ],
+                          child: BottomNavBar(),
+                        );
                       } else {
                         return LogInScreen();
                       }

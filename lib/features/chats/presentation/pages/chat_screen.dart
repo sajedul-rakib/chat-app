@@ -1,12 +1,10 @@
 import 'dart:developer';
-
-import 'package:chat_app/features/conversation/datasource/repositories/socket_repository.dart';
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../bloc/get_friend_list_bloc.dart';
+import '../bloc/get_user_bloc/get_friend_list_bloc.dart';
 import '../bloc/search_user_bloc/search_user_bloc.dart';
 import '../widgets/friend_list_ui.dart';
 import '../widgets/story_section.dart';
@@ -19,42 +17,23 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _friendGmailETController;
   late bool _openSearchInput;
   late bool _openSearchBox;
-  late SocketRepository _socketRepository;
 
   @override
   void initState() {
     context.read<GetFriendListBloc>().add(GetFriendListRequested());
-
-    WidgetsBinding.instance.addObserver(this);
-    _socketRepository = SocketRepository();
-    _socketRepository.connect();
     _openSearchBox = true;
     _openSearchInput = false;
     _friendGmailETController = TextEditingController();
     super.initState();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _socketRepository.connect();
-    }
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.detached) {
-      _socketRepository.disconnect();
-    }
-    super.didChangeAppLifecycleState(state);
-  }
-
   //dispose
   @override
   void dispose() {
-    _socketRepository.disconnect();
-    WidgetsBinding.instance.removeObserver(this);
     _friendGmailETController.dispose();
     super.dispose();
   }

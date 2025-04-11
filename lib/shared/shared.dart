@@ -12,7 +12,7 @@ class SharedData {
   static Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
     _token = _preferences?.getString('token');
-    _token = _preferences?.getString('userId');
+    _userId = _preferences?.getString('userId');
   }
 
   static SharedPreferences get instance {
