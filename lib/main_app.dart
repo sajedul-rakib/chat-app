@@ -2,9 +2,6 @@
 import 'package:chat_app/features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
-import 'package:chat_app/features/chats/presentation/add_user_bloc/add_user_bloc.dart';
-import 'package:chat_app/features/chats/presentation/bloc/bloc/get_friend_list_bloc.dart';
-import 'package:chat_app/features/chats/presentation/search_user_bloc/search_user_bloc.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
 import 'package:chat_app/features/conversation/presentation/bloc/message_bloc.dart';
 import 'package:chat_app/features/conversation/presentation/pages/conversation_screen.dart';
@@ -16,11 +13,13 @@ import 'package:chat_app/features/signup/presentation/pages/signup_screen.dart';
 import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/features/splash/presentation/page/splash_screen.dart';
 import 'package:chat_app/router/route_name.dart';
-import 'package:chat_app/services/notification/local_notification.dart';
 import 'package:chat_app/theme/bloc/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'features/chats/presentation/bloc/add_user_bloc/add_user_bloc.dart';
+import 'features/chats/presentation/bloc/get_friend_list_bloc.dart';
+import 'features/chats/presentation/bloc/search_user_bloc/search_user_bloc.dart';
 import 'features/login/domain/repositories/login_repo.dart';
 import 'features/login/presentation/bloc/sign_in_bloc.dart';
 import 'features/signup/domain/repositories/signup_repo.dart';

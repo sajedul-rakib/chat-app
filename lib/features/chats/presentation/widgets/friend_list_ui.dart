@@ -6,7 +6,7 @@ import '../../../../router/route_name.dart';
 import '../../../contacts/presentation/widgets/friend_list_tile.dart';
 import '../../../widgets/circular_progress_indicator.dart';
 import '../../../widgets/custom_snackbar.dart';
-import '../bloc/bloc/get_friend_list_bloc.dart';
+import '../bloc/get_friend_list_bloc.dart';
 import 'no_friend_ui.dart';
 
 class FriendListUi extends StatelessWidget {

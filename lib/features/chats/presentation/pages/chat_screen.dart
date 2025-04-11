@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:chat_app/features/chats/presentation/bloc/bloc/get_friend_list_bloc.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/socket_repository.dart';
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../search_user_bloc/search_user_bloc.dart';
+import '../bloc/get_friend_list_bloc.dart';
+import '../bloc/search_user_bloc/search_user_bloc.dart';
 import '../widgets/friend_list_ui.dart';
 import '../widgets/story_section.dart';
 import '../widgets/user_search_result.dart';

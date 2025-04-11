@@ -6,7 +6,7 @@ import 'package:chat_app/shared/shared.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import '../../data/models/search_model.dart';
+import '../../../data/models/search_model.dart';
 
 part 'search_user_event.dart';
 

@@ -1,4 +1,3 @@
-import 'package:chat_app/features/chats/presentation/add_user_bloc/add_user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -6,7 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../../../core/constants/colors/app_colors.dart';
 import '../../../splash/presentation/widgets/app_button.dart';
 import '../../../widgets/circular_progress_indicator.dart';
-import '../search_user_bloc/search_user_bloc.dart';
+import '../bloc/add_user_bloc/add_user_bloc.dart';
+import '../bloc/search_user_bloc/search_user_bloc.dart';
 
 class UserSearchResult extends StatelessWidget {
   const UserSearchResult({super.key, required this.textEditingController});
