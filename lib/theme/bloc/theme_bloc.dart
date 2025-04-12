@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
@@ -40,8 +39,4 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
     });
   }
 
-  @override
-  Future<void> close() {
-    return super.close();
-  }
 }

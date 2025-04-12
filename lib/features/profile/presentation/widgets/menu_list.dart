@@ -1,4 +1,3 @@
-import 'package:chat_app/features/widgets/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 
 class MenuList extends StatelessWidget {

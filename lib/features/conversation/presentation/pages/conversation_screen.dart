@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chat_app/features/chats/data/models/user.dart';
+import 'package:chat_app/features/chats/presentation/bloc/online_user_bloc/online_user_bloc.dart';
 import 'package:chat_app/features/conversation/datasource/models/message.dart';
 import 'package:chat_app/features/conversation/presentation/bloc/message_bloc.dart';
 import 'package:chat_app/features/widgets/circular_progress_indicator.dart';
@@ -277,14 +278,31 @@ class _ConversationScreenState extends State<ConversationScreen> {
         },
         child: Row(
           children: [
-            CircleAvatar(
-                backgroundImage: widget.friendUser.profilePic != null &&
-                        widget.friendUser.profilePic!.isNotEmpty
-                    ? NetworkImage(
-                        '${dotenv.env['BASE_URL']}${widget.friendUser.profilePic!}')
-                    : widget.friendUser.gender == 'female'
-                        ? AssetImage('assets/images/female.jpg')
-                        : AssetImage('assets/images/man.jpg')),
+            BlocBuilder<OnlineUserBloc, OnlineUserState>(
+              builder: (context, state) {
+                bool isOnline = false;
+                if (state is OnlineUsersUpdated) {
+                  isOnline = state.onlineUser[widget.friendUser.sId] ?? false;
+                }
+
+                return Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 3,
+                          color: isOnline ? Colors.green : Colors.red),
+                      shape: BoxShape.circle),
+                  child: CircleAvatar(
+                      backgroundImage: widget.friendUser.profilePic != null &&
+                              widget.friendUser.profilePic!.isNotEmpty
+                          ? NetworkImage(
+                              '${dotenv.env['BASE_URL']}${widget.friendUser.profilePic!}')
+                          : widget.friendUser.gender == 'female'
+                              ? AssetImage('assets/images/female.jpg')
+                              : AssetImage('assets/images/man.jpg')),
+                );
+              },
+            ),
             const SizedBox(width: 6),
             Text(
               widget.friendUser.fullName ?? " ",

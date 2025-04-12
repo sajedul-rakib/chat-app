@@ -24,14 +24,11 @@ void main() async {
   await FlutterNotification.instance.initialize();
   await dotenv.load(fileName: ".env");
   await SharedData.init();
-  String checkIsFirstOpen =
-      await SharedData.getLocalSaveItem("isFirst") ?? 'yes';
-  SharedData.saveToLocal('isFirst', 'no');
   runApp(MainApp(
-      signupRepo: SignupRepo(),
-      loginRepo: LoginRepo(),
-      chatRepo: ChatRepositories(),
-      profileRepo: ProfileRepository(),
-      messageRepositories: MessageRepositories(),
-      checkIsFirstOpen: checkIsFirstOpen == 'yes' ? true : false));
+    signupRepo: SignupRepo(),
+    loginRepo: LoginRepo(),
+    chatRepo: ChatRepositories(),
+    profileRepo: ProfileRepository(),
+    messageRepositories: MessageRepositories(),
+  ));
 }

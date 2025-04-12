@@ -1,14 +1,11 @@
 import 'dart:developer';
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../bloc/get_user_bloc/get_friend_list_bloc.dart';
-import '../bloc/search_user_bloc/search_user_bloc.dart';
 import '../widgets/friend_list_ui.dart';
 import '../widgets/story_section.dart';
-import '../widgets/user_search_result.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -19,14 +16,10 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _friendGmailETController;
-  late bool _openSearchInput;
-  late bool _openSearchBox;
 
   @override
   void initState() {
     context.read<GetFriendListBloc>().add(GetFriendListRequested());
-    _openSearchBox = true;
-    _openSearchInput = false;
     _friendGmailETController = TextEditingController();
     super.initState();
   }
@@ -36,16 +29,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     _friendGmailETController.dispose();
     super.dispose();
-  }
-
-  void _closeSearchBox() {
-    Future.delayed(Duration(seconds: 5)).then((v) {
-      if (_friendGmailETController.text.isEmpty) {
-        setState(() {
-          _openSearchInput = false;
-        });
-      }
-    });
   }
 
   @override
@@ -97,11 +80,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-          //search result
-          if (_openSearchBox)
-            UserSearchResult(
-              textEditingController: _friendGmailETController,
-            )
         ],
       )),
     );
@@ -109,54 +87,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   AppBar buildChatAppBar(BuildContext context) {
     return AppBar(
-        centerTitle: _openSearchInput,
         elevation: 0,
-        actions: [
-          if (!_openSearchInput)
-            InkWell(
-              onTap: () {
-                if (!_openSearchInput) {
-                  setState(() {
-                    _openSearchInput = true;
-                  });
-                  _closeSearchBox();
-                } else {
-                  setState(() {
-                    _openSearchInput = false;
-                  });
-                }
-              },
-              child: Icon(
-                CupertinoIcons.plus,
-                size: 30,
-              ),
-            ),
-          const SizedBox(
-            width: 30,
-          )
-        ],
-        title: _openSearchInput
-            ? InputFormField(
-                hintText: "Search friend with name or email",
-                textEditionController: _friendGmailETController,
-                onChange: (v) {
-                  if (v.isEmpty) {
-                    setState(() {
-                      _openSearchInput = false;
-                      _openSearchBox = false;
-                    });
-                  } else {
-                    setState(() {
-                      _openSearchBox = true;
-                    });
-                    context
-                        .read<SearchUserBloc>()
-                        .add(SearchFriendRequestRequired(keyword: v));
-                  }
-                },
-              )
-            : const Text(
-                "Chats",
-              ));
+        title: const Text(
+          "Chats",
+        ));
   }
 }

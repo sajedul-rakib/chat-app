@@ -1,3 +1,4 @@
+import 'package:chat_app/features/add_freind/presentation/page/add_friend.dart';
 import 'package:chat_app/features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
@@ -17,9 +18,9 @@ import 'package:chat_app/theme/bloc/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'features/chats/presentation/bloc/add_user_bloc/add_user_bloc.dart';
+import 'features/add_freind/presentation/bloc/add_user_bloc/add_user_bloc.dart';
 import 'features/chats/presentation/bloc/get_user_bloc/get_friend_list_bloc.dart';
-import 'features/chats/presentation/bloc/search_user_bloc/search_user_bloc.dart';
+import 'features/add_freind/presentation/bloc/search_user_bloc/search_user_bloc.dart';
 import 'features/login/domain/repositories/login_repo.dart';
 import 'features/login/presentation/bloc/sign_in_bloc.dart';
 import 'features/signup/domain/repositories/signup_repo.dart';
@@ -34,20 +35,17 @@ class MainApp extends StatelessWidget {
     required ChatRepo chatRepo,
     required ProfileRepo profileRepo,
     required MessageRepositories messageRepositories,
-    required bool checkIsFirstOpen,
   })  : _signupRepo = signupRepo,
         _loginRepo = loginRepo,
         _chatRepo = chatRepo,
         _profileRepo = profileRepo,
-        _messageRepositories = messageRepositories,
-        _checkIsFirstOpen = checkIsFirstOpen;
+        _messageRepositories = messageRepositories;
 
   final SignupRepo _signupRepo;
   final LoginRepo _loginRepo;
   final ChatRepo _chatRepo;
   final ProfileRepo _profileRepo;
   final MessageRepositories _messageRepositories;
-  final bool _checkIsFirstOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +57,16 @@ class MainApp extends StatelessWidget {
               ..add(AuthenticationUserChanged())),
         BlocProvider(create: (_) => SignInBloc(loginRepo: _loginRepo)),
         BlocProvider(create: (_) => SignUpBloc(signUpRepo: _signupRepo)),
+        BlocProvider(create: (_) => GetFriendListBloc(chatRepo: _chatRepo)),
+        BlocProvider(create: (_) => OnlineUserBloc()..add(ConnectToSocket())),
+        BlocProvider(
+            create: (_) =>
+                MessageBloc(messageRepositories: _messageRepositories)),
+        BlocProvider(
+            create: (_) => SendBloc(messageRepositories: _messageRepositories)),
+        BlocProvider(create: (_) => SearchUserBloc(chatRepo: _chatRepo)),
+        BlocProvider(create: (_) => AddUserBloc(chatRepo: _chatRepo)),
+        BlocProvider(create: (_) => ProfileBloc(profileRepo: _profileRepo)),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
@@ -84,44 +92,18 @@ class MainApp extends StatelessWidget {
                   loggedUserId: args['loggedUserId'],
                 );
               },
+              RouteName.addFriend: (context) => AddFriend(),
             },
             initialRoute: RouteName.initial,
-            home: _checkIsFirstOpen
-                ? SplashScreen()
-                : BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                    builder: (context, state) {
-                      if (state.status == AuthenticateStatus.authenticate) {
-                        return MultiBlocProvider(
-                          providers: [
-                            BlocProvider(
-                                create: (_) =>
-                                    GetFriendListBloc(chatRepo: _chatRepo)),
-                            BlocProvider(
-                                create: (_) =>
-                                    OnlineUserBloc()..add(ConnectToSocket())),
-                            BlocProvider(
-                                create: (_) => MessageBloc(
-                                    messageRepositories: _messageRepositories)),
-                            BlocProvider(
-                                create: (_) => SendBloc(
-                                    messageRepositories: _messageRepositories)),
-                            BlocProvider(
-                                create: (_) =>
-                                    SearchUserBloc(chatRepo: _chatRepo)),
-                            BlocProvider(
-                                create: (_) =>
-                                    AddUserBloc(chatRepo: _chatRepo)),
-                            BlocProvider(
-                                create: (_) =>
-                                    ProfileBloc(profileRepo: _profileRepo)),
-                          ],
-                          child: BottomNavBar(),
-                        );
-                      } else {
-                        return LogInScreen();
-                      }
-                    },
-                  ),
+            home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                if (state.status == AuthenticateStatus.authenticate) {
+                  return BottomNavBar();
+                } else {
+                  return SplashScreen();
+                }
+              },
+            ),
             title: "Chateo",
           );
         },

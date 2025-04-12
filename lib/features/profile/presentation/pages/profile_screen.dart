@@ -1,3 +1,4 @@
+import 'package:chat_app/features/chats/presentation/bloc/online_user_bloc/online_user_bloc.dart';
 import 'package:chat_app/features/login/presentation/bloc/sign_in_bloc.dart';
 import 'package:chat_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:chat_app/features/profile/presentation/widgets/theme_mode_list_tile.dart';
@@ -59,6 +60,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       trailingWidgets: Icon(CupertinoIcons.right_chevron),
                       title: "Accounts",
                     ),
+                    MenuList(
+                      leadingIcon: Icons.person_add_alt,
+                      trailingWidgets: Icon(CupertinoIcons.right_chevron),
+                      title: "Add Friend",
+                      onPressed: () {
+                        Navigator.pushNamed(context, RouteName.addFriend);
+                      },
+                    ),
                     const SizedBox(
                       height: 30,
                     ),
@@ -104,6 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     backgroundColor: Colors.red,
                     onPressed: () {
                       context.read<SignInBloc>().add(SignOutRequired());
+                      context.read<OnlineUserBloc>().close();
                     },
                   ),
                 )

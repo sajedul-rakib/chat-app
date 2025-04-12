@@ -7,4 +7,5 @@ class RouteName {
   static const String contactScreen = '/contacts';
   static const String profileScreen = '/profile';
   static const String conversationScreen = '/conversation-screen';
+  static const String addFriend = '/add-friend';
 }

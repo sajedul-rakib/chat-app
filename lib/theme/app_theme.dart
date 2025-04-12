@@ -27,7 +27,7 @@ class AppTheme {
       textButtonTheme: MobileTextButtonTheme.lightTextButtonTheme(context),
       listTileTheme: MobileListTileTheme.lightListTileTheme,
       textTheme: MobileTextTheme.textTheme,
-      snackBarTheme: SnackBarTheme.lightSnackbarTheme);
+      snackBarTheme: SnackBarTheme.lightSnackbarTheme,);
 
   static ThemeData darkTheme(BuildContext context) => ThemeData(
       useMaterial3: true,

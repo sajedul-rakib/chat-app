@@ -1,3 +1,4 @@
+import 'package:chat_app/core/constants/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class InputFormField extends StatelessWidget {
@@ -13,7 +14,8 @@ class InputFormField extends StatelessWidget {
       this.onChange,
       this.autoCorrect = false,
       this.filledInput = false,
-      this.focusNode,this.filledColor});
+      this.focusNode,
+      this.filledColor});
 
   final bool obscureText;
   final TextEditingController? textEditionController;
@@ -31,6 +33,7 @@ class InputFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+        cursorColor: AppColors.lightButtonBackground,
         focusNode: focusNode,
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         autocorrect: autoCorrect,

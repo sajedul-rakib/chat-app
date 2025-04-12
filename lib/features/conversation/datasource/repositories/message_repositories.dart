@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:chat_app/apis/api_endpoints.dart';
 import 'package:chat_app/apis/api_service.dart';
 import 'package:chat_app/apis/model/response_model.dart';
-import 'package:chat_app/features/conversation/datasource/models/message_model.dart';
 import 'package:chat_app/features/conversation/domain/repositories/message_repo.dart';
 
 class MessageRepositories extends MessageRepo {

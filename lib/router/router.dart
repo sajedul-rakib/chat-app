@@ -1,8 +1,5 @@
-import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/router/route_name.dart';
-import 'package:chat_app/shared/shared.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/bottom_nav_bar/presentation/bottom_nav_bar.dart';

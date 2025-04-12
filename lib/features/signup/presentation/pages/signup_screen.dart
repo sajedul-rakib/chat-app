@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';

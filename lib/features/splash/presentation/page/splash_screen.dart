@@ -1,7 +1,6 @@
 import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../router/route_name.dart';
 import '../../../login/domain/repositories/login_repo.dart';

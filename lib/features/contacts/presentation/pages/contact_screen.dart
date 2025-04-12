@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../widgets/add_friend_dialog.dart';
-import '../widgets/friend_list_tile.dart';
 
 class ContactScreen extends StatelessWidget {
   ContactScreen({super.key});
@@ -62,6 +61,7 @@ class ContactScreen extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: 20,
                 itemBuilder: (_, index) {
+                  return Center();
                   // return const FriendListTile(
                   //   conversation:null,
                   // );

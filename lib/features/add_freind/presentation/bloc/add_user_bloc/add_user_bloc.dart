@@ -1,13 +1,12 @@
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
 import 'package:chat_app/shared/shared.dart';
 import 'package:meta/meta.dart';
 
-import '../../../data/models/Conversation.dart';
-import '../../../data/models/user.dart';
-import '../get_user_bloc/get_friend_list_bloc.dart';
+import '../../../../chats/data/models/Conversation.dart';
+import '../../../../chats/data/models/user.dart';
+import '../../../../chats/presentation/bloc/get_user_bloc/get_friend_list_bloc.dart';
 
 part 'add_user_event.dart';
 
