@@ -1,5 +1,5 @@
 import 'package:chat_app/features/add_freind/presentation/bloc/search_user_bloc/search_user_bloc.dart';
-import 'package:chat_app/features/add_freind/presentation/page/user_search_result.dart';
+import 'package:chat_app/features/add_freind/presentation/widget/user_search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

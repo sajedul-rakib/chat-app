@@ -7,8 +7,7 @@ final class AddUserInitial extends AddUserState {}
 
 final class AddFriendLoading extends AddUserState{}
 final class AddFriendSuccess extends AddUserState{
-  final Conversation conversation;
-  AddFriendSuccess({required this.conversation});
+  AddFriendSuccess();
 }
 final class AddFriendFailure extends AddUserState{
   final String? errMsg;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../theme/bloc/theme_bloc.dart';
-import 'menu_list.dart';
 
 class ThemeModeListTile extends StatelessWidget {
   const ThemeModeListTile({super.key});
@@ -10,23 +9,32 @@ class ThemeModeListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeBloc, ThemeState>(builder: (context, state) {
-      return MenuList(
-        leadingIcon: state.themeType == ThemeType.dark
+      return ListTile(
+        leading: Icon(state.themeType == ThemeType.dark
             ? Icons.dark_mode
             : state.themeType == ThemeType.light
                 ? Icons.light_mode
-                : Icons.bookmark_outline,
-        title:
-            "Appearance - ${state.themeType == ThemeType.dark ? "Dark" : state.themeType == ThemeType.light ? "Light" : "System"}",
-        trailingWidgets: PopupMenuButton(itemBuilder: (context) {
+                : Icons.settings),
+        title: Text(
+            "Appearance - ${state.themeType == ThemeType.dark ? "Dark" : state.themeType == ThemeType.light ? "Light" : "System"}",style: Theme.of(context)
+            .textTheme
+            .bodyLarge!
+            .copyWith(fontWeight: FontWeight.w700)),
+        trailing: PopupMenuButton(itemBuilder: (context) {
           return [
             PopupMenuItem(
                 value: 'Light',
                 onTap: () => BlocProvider.of<ThemeBloc>(context)
                     .add(const ThemeModeChanged(themeMode: 'light')),
-                child: MenuList(
-                  title: 'Light',
-                  trailingWidgets: Visibility(
+                child: ListTile(
+                  title: Text(
+                    "Light",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  trailing: Visibility(
                       visible: state.themeType == ThemeType.light,
                       child: const Icon(Icons.check)),
                 )),
@@ -37,9 +45,15 @@ class ThemeModeListTile extends StatelessWidget {
                       .add(ThemeModeChanged(themeMode: 'dark'));
                 },
                 value: 'Dark',
-                child: MenuList(
-                  title: 'Dark',
-                  trailingWidgets: Visibility(
+                child: ListTile(
+                  title: Text(
+                    "Dark",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  trailing: Visibility(
                       visible: state.themeType == ThemeType.dark,
                       child: const Icon(Icons.check)),
                 )),
@@ -47,9 +61,15 @@ class ThemeModeListTile extends StatelessWidget {
                 onTap: () => BlocProvider.of<ThemeBloc>(context)
                     .add(const ThemeModeChanged(themeMode: 'system')),
                 value: 'System',
-                child: MenuList(
-                  title: 'System',
-                  trailingWidgets: Visibility(
+                child: ListTile(
+                  title: Text(
+                    "System",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.w700,fontSize: 15),
+                  ),
+                  trailing: Visibility(
                       visible: state.themeType == ThemeType.system,
                       child: const Icon(Icons.check)),
                 ))

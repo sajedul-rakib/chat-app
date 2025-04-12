@@ -74,8 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  FriendListUi(
-                      friendGmailETController: _friendGmailETController)
+                  FriendListUi()
                 ],
               ),
             ),

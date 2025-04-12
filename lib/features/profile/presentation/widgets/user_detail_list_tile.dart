@@ -42,14 +42,14 @@ class UserDetailListTile extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
+                  .copyWith(fontWeight: FontWeight.w700, fontSize: 20),
             ),
             subtitle: Text(
               state.user.email ?? '',
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!
-                  .copyWith(fontWeight: FontWeight.w500, fontSize: 15),
+                  .copyWith(fontWeight: FontWeight.w700, fontSize: 17),
             ),
           );
         } else if (state is GetUserDataFailure) {

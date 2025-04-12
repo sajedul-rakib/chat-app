@@ -56,12 +56,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 30,
                     ),
                     const MenuList(
-                      leadingIcon: Icons.person,
+                      leadingWidget: Icon(Icons.person),
                       trailingWidgets: Icon(CupertinoIcons.right_chevron),
                       title: "Accounts",
                     ),
                     MenuList(
-                      leadingIcon: Icons.person_add_alt,
+                      leadingWidget: Icon(Icons.person_add_alt),
                       trailingWidgets: Icon(CupertinoIcons.right_chevron),
                       title: "Add Friend",
                       onPressed: () {
@@ -73,17 +73,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ThemeModeListTile(),
                     const MenuList(
-                      leadingIcon: Icons.notifications,
+                      leadingWidget: Icon(Icons.notifications),
                       title: "Notification",
                       trailingWidgets: Icon(CupertinoIcons.right_chevron),
                     ),
                     const MenuList(
-                      leadingIcon: Icons.privacy_tip_outlined,
+                      leadingWidget: Icon(Icons.privacy_tip_outlined),
                       title: "Privacy",
                       trailingWidgets: Icon(CupertinoIcons.right_chevron),
                     ),
                     const MenuList(
-                      leadingIcon: FontAwesomeIcons.file,
+                      leadingWidget: Icon(FontAwesomeIcons.file),
                       title: "Data Usage",
                       trailingWidgets: Icon(CupertinoIcons.right_chevron),
                     ),
@@ -91,12 +91,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 30,
                     ),
                     const MenuList(
-                      leadingIcon: Icons.question_mark_rounded,
+                      leadingWidget: Icon(Icons.question_mark_rounded),
                       title: "Help",
                       trailingWidgets: Icon(CupertinoIcons.right_chevron),
                     ),
                     const MenuList(
-                      leadingIcon: Icons.messenger_outline_outlined,
+                      leadingWidget: Icon(Icons.messenger_outline_outlined),
                       title: "Invite Your Friends",
                       trailingWidgets: Icon(CupertinoIcons.right_chevron),
                     ),

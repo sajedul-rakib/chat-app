@@ -12,10 +12,8 @@ import 'no_friend_ui.dart';
 class FriendListUi extends StatelessWidget {
   const FriendListUi({
     super.key,
-    required TextEditingController friendGmailETController,
-  }) : _friendGmailETController = friendGmailETController;
+  }) ;
 
-  final TextEditingController _friendGmailETController;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +68,7 @@ class FriendListUi extends StatelessWidget {
                   return const Divider();
                 },
               )
-            : NoFriendUi(friendGmailETController: _friendGmailETController);
+            : NoFriendUi();
       } else if (state is GetFriendListFailure) {
         return SizedBox(
           width: 200,
