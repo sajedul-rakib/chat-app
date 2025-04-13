@@ -282,7 +282,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               builder: (context, state) {
                 bool isOnline = false;
                 if (state is OnlineUsersUpdated) {
-                  isOnline = state.onlineUser[widget.friendUser.sId] ?? false;
+                  isOnline = state.onlineUser.contains(widget.friendUser.sId);
                 }
 
                 return Container(

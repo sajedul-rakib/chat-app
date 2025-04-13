@@ -11,7 +11,10 @@ final class SignInInitial extends SignInState {}
 
 final class SignInProccess extends SignInState {}
 
-final class SignInSuccess extends SignInState {}
+final class SignInSuccess extends SignInState {
+  final String token;
+  const SignInSuccess(this.token);
+}
 
 final class SignInFailure extends SignInState {
   final String errorMessage;

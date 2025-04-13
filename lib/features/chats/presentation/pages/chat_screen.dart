@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,9 +66,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         size: 15,
                       ),
                     ),
-                    onChange: (value) {
-                      log(value);
-                    },
                   ),
                   const SizedBox(
                     height: 20,

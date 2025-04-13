@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:chat_app/apis/api_endpoints.dart';
 import 'package:chat_app/apis/api_service.dart';
@@ -9,6 +9,10 @@ import 'package:chat_app/shared/shared.dart';
 import '../../data/repositories/login_repository.dart';
 
 class LoginRepo extends LogInRepository {
+  final _controller = StreamController<String?>.broadcast();
+
+  Stream<String?> get userStream => _controller.stream;
+
   @override
   Future<ResponseModel> signIn(
       {required String email,
@@ -17,15 +21,13 @@ class LoginRepo extends LogInRepository {
     try {
       final response = await ApiService.callApiWithPostMethod(
           url: ApiEndPoints.signIn,
-          body: {
-            "email": email,
-            'password': password,
-            'fcmToken': fcmToken
-          });
+          body: {"email": email, 'password': password, 'fcmToken': fcmToken});
 
       if (response.status == 200) {
         SharedData.saveToLocal("token", response.body?['token']);
         SharedData.saveToLocal("userId", response.body?['id']);
+        _controller.add(response.body?['token']);
+
         return response;
       } else {
         return response;
@@ -38,21 +40,14 @@ class LoginRepo extends LogInRepository {
 
   @override
   Future<String> checkUserLoggedIn() async {
-    try {
-      String getToken = await SharedData.getLocalSaveItem('token') ?? '';
-      if (getToken.isNotEmpty) {
-        return getToken;
-      } else {
-        return '';
-      }
-    } catch (err) {
-      log(err.toString());
-      rethrow;
-    }
+    String? getToken = await SharedData.getLocalSaveItem('token');
+    _controller.add(getToken?.isNotEmpty == true ? getToken : null);
+    return getToken ?? '';
   }
 
   @override
   Future<bool> logOut() async {
+    _controller.add(null);
     return SharedData.deleteAllSave();
   }
 }

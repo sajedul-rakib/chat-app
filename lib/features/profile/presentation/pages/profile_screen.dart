@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../shared/shared.dart';
 import '../widgets/menu_list.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -113,7 +114,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     backgroundColor: Colors.red,
                     onPressed: () {
                       context.read<SignInBloc>().add(SignOutRequired());
-                      context.read<OnlineUserBloc>().close();
+                      final onlineUserBloc = context.read<OnlineUserBloc>();
+                      onlineUserBloc.socket
+                          ?.emit("user_offline", {"userId": SharedData.userId});
+                      onlineUserBloc.socket?.disconnect();
                     },
                   ),
                 )

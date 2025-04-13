@@ -3,6 +3,7 @@ import 'package:chat_app/features/profile/presentation/pages/profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../shared/shared.dart';
 import '../../chats/presentation/bloc/online_user_bloc/online_user_bloc.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -12,12 +13,10 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> with WidgetsBindingObserver {
+class _BottomNavBarState extends State<BottomNavBar>
+    with WidgetsBindingObserver {
   int _currentIndex = 0;
-  final List<Widget> _pages = [
-    const ChatScreen(),
-    const ProfileScreen()
-  ];
+  final List<Widget> _pages = [const ChatScreen(), const ProfileScreen()];
 
   @override
   void initState() {
@@ -32,11 +31,20 @@ class _BottomNavBarState extends State<BottomNavBar> with WidgetsBindingObserver
       });
     }
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state==AppLifecycleState.detached){
-      context.read<OnlineUserBloc>().close();
+    final bloc = context.read<OnlineUserBloc>();
+
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      bloc.socket?.emit("user_offline", {"userId": SharedData.userId});
+      bloc.socket?.disconnect();
+    } else if (state == AppLifecycleState.resumed) {
+      bloc.socket?.connect();
+      bloc.socket?.emit("user_online", {"userId": SharedData.userId});
     }
+
     super.didChangeAppLifecycleState(state);
   }
 

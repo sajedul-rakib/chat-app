@@ -1,4 +1,3 @@
-import 'package:chat_app/features/add_freind/presentation/page/add_friend.dart';
 import 'package:chat_app/features/bottom_nav_bar/presentation/bottom_nav_bar.dart';
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
@@ -17,10 +16,10 @@ import 'package:chat_app/router/route_name.dart';
 import 'package:chat_app/theme/bloc/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'features/add_freind/presentation/bloc/add_user_bloc/add_user_bloc.dart';
+import 'features/add_friend/presentation/bloc/add_user_bloc/add_user_bloc.dart';
+import 'features/add_friend/presentation/bloc/search_user_bloc/search_user_bloc.dart';
+import 'features/add_friend/presentation/page/add_friend.dart';
 import 'features/chats/presentation/bloc/get_user_bloc/get_friend_list_bloc.dart';
-import 'features/add_freind/presentation/bloc/search_user_bloc/search_user_bloc.dart';
 import 'features/login/domain/repositories/login_repo.dart';
 import 'features/login/presentation/bloc/sign_in_bloc.dart';
 import 'features/signup/domain/repositories/signup_repo.dart';
@@ -52,13 +51,10 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ThemeBloc()..add(InitialTheme())),
-        BlocProvider(
-            create: (_) => AuthenticationBloc(loginRepo: _loginRepo)
-              ..add(AuthenticationUserChanged())),
+        BlocProvider(create: (_) => AuthenticationBloc(loginRepo: _loginRepo)),
         BlocProvider(create: (_) => SignInBloc(loginRepo: _loginRepo)),
         BlocProvider(create: (_) => SignUpBloc(signUpRepo: _signupRepo)),
         BlocProvider(create: (_) => GetFriendListBloc(chatRepo: _chatRepo)),
-        BlocProvider(create: (_) => OnlineUserBloc()..add(ConnectToSocket())),
         BlocProvider(
             create: (_) =>
                 MessageBloc(messageRepositories: _messageRepositories)),
@@ -94,13 +90,18 @@ class MainApp extends StatelessWidget {
               },
               RouteName.addFriend: (context) => AddFriend(),
             },
-            initialRoute: RouteName.initial,
             home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state.status == AuthenticateStatus.authenticate) {
-                  return BottomNavBar();
+                  return BlocProvider(
+                    create: (context) =>
+                        OnlineUserBloc()..add(ConnectToSocket()),
+                    child: BottomNavBar(),
+                  );
+                } else if (state.status == AuthenticateStatus.unAuthenticate) {
+                  return const LogInScreen(); // Go directly to login
                 } else {
-                  return SplashScreen();
+                  return const SplashScreen(); // Or loading indicator while checking
                 }
               },
             ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chat_app/features/chats/data/repositories/chat_repositories.dart';
 import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
 import 'package:chat_app/features/profile/domain/repositories/profile_repository.dart';
@@ -21,7 +23,9 @@ void main() async {
 
   // load the env file which contain various data
   await Firebase.initializeApp();
-  await FlutterNotification.instance.initialize();
+  if(!Platform.isIOS) {
+    await FlutterNotification.instance.initialize();
+  }
   await dotenv.load(fileName: ".env");
   await SharedData.init();
   runApp(MainApp(

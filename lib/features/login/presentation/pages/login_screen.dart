@@ -1,4 +1,5 @@
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
+import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/features/splash/presentation/widgets/app_button.dart';
 import 'package:chat_app/features/widgets/circular_progress_indicator.dart';
 import 'package:chat_app/features/widgets/custom_snackbar.dart';
@@ -52,13 +53,14 @@ class _LogInScreenState extends State<LogInScreen> {
             if (state is SignInSuccess) {
               _emailETController.clear();
               _passwordETController.clear();
-              Navigator.pushReplacementNamed(
-                  context, RouteName.bottomNavBarScreen);
 
               CustomSnackbar.show(
                   context: context,
                   message: "Log in successful",
                   backgroundColor: Theme.of(context).colorScheme.secondary);
+              context
+                  .read<AuthenticationBloc>()
+                  .add(AppLoggedIn(state.token));
             } else if (state is SignInFailure) {
               CustomSnackbar.show(
                   context: context,

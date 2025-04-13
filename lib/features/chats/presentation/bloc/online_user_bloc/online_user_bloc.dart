@@ -1,4 +1,4 @@
-
+import 'dart:developer';
 import 'package:chat_app/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,17 +7,17 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 part 'online_user_event.dart';
-
 part 'online_user_state.dart';
 
 class OnlineUserBloc extends Bloc<OnlineUserEvent, OnlineUserState>
     with WidgetsBindingObserver {
-  late final io.Socket _socket;
-  final Map<String, bool> _onlineUser = {};
+  io.Socket? socket;
 
   OnlineUserBloc() : super(OnlineUserInitial()) {
     on<ConnectToSocket>((event, emit) {
-      _socket = io.io(
+      if (socket?.connected == true) return;
+
+      socket = io.io(
         dotenv.env['BASE_URL'],
         io.OptionBuilder()
             .setTransports(['websocket'])
@@ -25,29 +25,25 @@ class OnlineUserBloc extends Bloc<OnlineUserEvent, OnlineUserState>
             .build(),
       );
 
-      // Connect socket
-      _socket.connect();
+      socket!.connect();
+      socket!.emit("user_online", {"userId": SharedData.userId});
 
-      _socket
-          .emit("user_online", {'userId': SharedData.userId, "isOnline": true});
-
-      _socket.on("online_user", (data) {
-        data.forEach((key, value) {
-          add(UserOnlineStatusChanged(key, value));
-        });
+      socket!.on("online_user", (data) {
+        log("Online Users: $data");
+        add(UserOnlineStatusChanged(
+            (data as List).map((e) => e.toString()).toList()));
       });
     });
 
     on<UserOnlineStatusChanged>((event, emit) {
-      _onlineUser[event.userId] = event.isOnline;
-      emit(OnlineUsersUpdated(Map<String, bool>.from(_onlineUser)));
+      emit(OnlineUsersUpdated(event.onlineUser));
     });
   }
 
   @override
   Future<void> close() {
-    _socket.emit('user_offline', {"userId": SharedData.userId});
-    _socket.disconnect();
+    socket?.emit('user_offline', {"userId": SharedData.userId});
+    socket?.disconnect();
     return super.close();
   }
 }

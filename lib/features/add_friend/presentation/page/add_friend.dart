@@ -1,9 +1,9 @@
-import 'package:chat_app/features/add_freind/presentation/bloc/search_user_bloc/search_user_bloc.dart';
-import 'package:chat_app/features/add_freind/presentation/widget/user_search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../signup/presentation/widget/text_form_field.dart';
+import '../bloc/search_user_bloc/search_user_bloc.dart';
+import '../widget/user_search_result.dart';
 
 class AddFriend extends StatefulWidget {
   const AddFriend({super.key});

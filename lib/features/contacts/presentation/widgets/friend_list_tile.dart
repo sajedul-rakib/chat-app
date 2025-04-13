@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/chats/presentation/bloc/online_user_bloc/online_user_bloc.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +23,7 @@ class FriendListTile extends StatelessWidget {
         bool isOnline = false;
 
         if (state is OnlineUsersUpdated) {
-          log(state.onlineUser.toString());
-          isOnline = state.onlineUser[user.sId] ?? false;
+          isOnline = state.onlineUser.contains(user.sId);
         }
 
         return ListTile(

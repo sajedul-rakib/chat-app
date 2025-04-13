@@ -10,7 +10,7 @@ final class OnlineUserInitial extends OnlineUserState {
 
 
 final class OnlineUsersUpdated extends OnlineUserState{
-  final Map<String,bool> onlineUser;
+  final List<String> onlineUser;
 
   OnlineUsersUpdated(this.onlineUser);
 

@@ -25,7 +25,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         final response = await _loginRepo.signIn(
             email: event.email, password: event.password, fcmToken: fcmToken);
         if (response.status == 200) {
-          emit(SignInSuccess());
+        String token= response.body?['token'];
+          emit(SignInSuccess(token));
         } else {
           String errMsg =
               ErrorModel.fromJson(response.errMsg!).errors?.errMsg?.msg ?? '';
