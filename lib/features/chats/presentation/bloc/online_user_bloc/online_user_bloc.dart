@@ -25,11 +25,10 @@ class OnlineUserBloc extends Bloc<OnlineUserEvent, OnlineUserState>
             .build(),
       );
 
-      socket!.connect();
-      socket!.emit("user_online", {"userId": SharedData.userId});
+      socket?.connect();
+      socket?.emit("user_online", {"userId": SharedData.userId});
 
-      socket!.on("online_user", (data) {
-        log("Online Users: $data");
+      socket?.on("online_user", (data) {
         add(UserOnlineStatusChanged(
             (data as List).map((e) => e.toString()).toList()));
       });

@@ -63,6 +63,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (_) => SearchUserBloc(chatRepo: _chatRepo)),
         BlocProvider(create: (_) => AddUserBloc(chatRepo: _chatRepo)),
         BlocProvider(create: (_) => ProfileBloc(profileRepo: _profileRepo)),
+        BlocProvider(create: (_) => OnlineUserBloc()..add(ConnectToSocket())),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
@@ -93,11 +94,7 @@ class MainApp extends StatelessWidget {
             home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state.status == AuthenticateStatus.authenticate) {
-                  return BlocProvider(
-                    create: (context) =>
-                        OnlineUserBloc()..add(ConnectToSocket()),
-                    child: BottomNavBar(),
-                  );
+                  return BottomNavBar();
                 } else if (state.status == AuthenticateStatus.unAuthenticate) {
                   return const LogInScreen(); // Go directly to login
                 } else {
