@@ -10,10 +10,9 @@ import '../bloc/get_user_bloc/get_friend_list_bloc.dart';
 import 'no_friend_ui.dart';
 
 class FriendListUi extends StatelessWidget {
-  const FriendListUi({
-    super.key,
-  }) ;
+  const FriendListUi({super.key, this.lastMessage});
 
+  final String? lastMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class FriendListUi extends StatelessWidget {
                       state.friendList.conversation![index].owner!.sId) {
                     return FriendListTile(
                       user: state.friendList.conversation![index].participant!,
-                      lastMessage:
+                      lastMessage: lastMessage ??
                           state.friendList.conversation![index].lastMessage,
                       onPressed: () => Navigator.pushNamed(
                           context, RouteName.conversationScreen,
@@ -50,7 +49,7 @@ class FriendListUi extends StatelessWidget {
                   } else {
                     return FriendListTile(
                       user: state.friendList.conversation![index].owner!,
-                      lastMessage:
+                      lastMessage: lastMessage ??
                           state.friendList.conversation![index].lastMessage,
                       onPressed: () => Navigator.pushNamed(
                           context, RouteName.conversationScreen,
@@ -81,7 +80,9 @@ class FriendListUi extends StatelessWidget {
               AppButton(
                 buttonTitle: "Retry",
                 onPressed: () {
-                  context.read<GetFriendListBloc>().add(GetFriendListRequested());
+                  context
+                      .read<GetFriendListBloc>()
+                      .add(GetFriendListRequested());
                 },
               ),
             ],

@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
 part 'message_event.dart';
-
 part 'message_state.dart';
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
@@ -19,7 +18,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         super(InitialMessageState()) {
     on<GetMessageRequest>((event, emit) async {
       try {
-        final token =await SharedData.getLocalSaveItem('token') ?? " ";
+        final token = await SharedData.getLocalSaveItem('token') ?? " ";
         final result = await _messageRepositories.getMessage(
             conversationId: event.conversationId, token: token);
         emit(GetMessageStateSuccess(
@@ -33,7 +32,10 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       if (state is GetMessageStateSuccess) {
         final successState = state as GetMessageStateSuccess;
         final updatedMessageModel = MessageModel(
-          messages: [event.message, ...successState.messageModel.messages ??[]],
+          messages: [
+            event.message,
+            ...successState.messageModel.messages ?? []
+          ],
         );
         emit(GetMessageStateSuccess(messageModel: updatedMessageModel));
       }
