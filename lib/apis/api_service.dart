@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
+
 import 'package:chat_app/apis/model/response_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 class ApiService {
   static Future<ResponseModel> callApiWithGetMethod({
