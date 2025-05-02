@@ -16,6 +16,7 @@ import 'package:chat_app/router/route_name.dart';
 import 'package:chat_app/theme/bloc/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'features/add_friend/presentation/bloc/add_user_bloc/add_user_bloc.dart';
 import 'features/add_friend/presentation/bloc/search_user_bloc/search_user_bloc.dart';
 import 'features/add_friend/presentation/page/add_friend.dart';
@@ -51,7 +52,9 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ThemeBloc()..add(InitialTheme())),
-        BlocProvider(create: (_) => AuthenticationBloc(loginRepo: _loginRepo)),
+        BlocProvider(
+            create: (_) => AuthenticationBloc(loginRepo: _loginRepo)
+              ..add(CheckUserLoggedIn())),
         BlocProvider(create: (_) => SignInBloc(loginRepo: _loginRepo)),
         BlocProvider(create: (_) => SignUpBloc(signUpRepo: _signupRepo)),
         BlocProvider(create: (_) => GetFriendListBloc(chatRepo: _chatRepo)),
