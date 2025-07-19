@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
         child: BlocProvider(
-          create: (context) => AuthenticationBloc(loginRepo: LoginRepo()),
+          create: (context) => AuthenticationBloc(loginRepo: LoginRepoImpl()),
           child: Column(
             children: [
               const Spacer(),

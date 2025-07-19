@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../../../theme/color_scheme.dart';
 
 class MessageBox extends StatefulWidget {
   const MessageBox({
@@ -51,8 +50,7 @@ class _MessageBoxState extends State<MessageBox>
             child: ChatBubble(
               backGroundColor: widget.bubbleType != BubbleType.sendBubble
                   ? Theme.of(context).brightness == Brightness.light
-                      ? ColorSchemed.lightColorScheme.tertiary
-                          .withValues(alpha: 7)
+                      ? Color(0xffF7F7FC)
                       : Theme.of(context)
                           .colorScheme
                           .primary

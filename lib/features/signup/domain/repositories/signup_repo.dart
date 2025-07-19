@@ -7,7 +7,7 @@ import 'package:chat_app/features/signup/data/models/user.dart';
 
 import '../../data/repositories/signup_repository.dart';
 
-class SignupRepo implements SignupRepository {
+class SignupRepoImpl implements SignupRepo {
   @override
   Future<ResponseModel> signUp(
       {required MyUser user,

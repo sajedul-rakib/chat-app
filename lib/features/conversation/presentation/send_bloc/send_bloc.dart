@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
+import 'package:chat_app/features/conversation/domain/repositories/message_repo.dart';
 import 'package:chat_app/shared/shared.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -9,9 +9,9 @@ part 'send_event.dart';
 part 'send_state.dart';
 
 class SendBloc extends Bloc<SendEvent, SendState> {
-  final MessageRepositories _messageRepositories;
+  final MessageRepo _messageRepositories;
 
-  SendBloc({required MessageRepositories messageRepositories})
+  SendBloc({required MessageRepo messageRepositories})
       : _messageRepositories = messageRepositories,
         super(SendInitial()) {
     on<SendMessageRequest>((event, emit) async {

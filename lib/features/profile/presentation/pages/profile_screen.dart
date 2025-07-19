@@ -1,6 +1,5 @@
 import 'package:chat_app/features/chats/presentation/bloc/online_user_bloc/online_user_bloc.dart';
 import 'package:chat_app/features/login/presentation/bloc/sign_in_bloc.dart';
-import 'package:chat_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:chat_app/features/profile/presentation/widgets/theme_mode_list_tile.dart';
 import 'package:chat_app/features/profile/presentation/widgets/user_detail_list_tile.dart';
 import 'package:chat_app/features/splash/presentation/widgets/app_button.dart';
@@ -14,19 +13,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../shared/shared.dart';
 import '../widgets/menu_list.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  @override
-  void initState() {
-    context.read<ProfileBloc>().add(GetUserDetailRequired());
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

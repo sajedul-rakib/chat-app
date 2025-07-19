@@ -8,7 +8,7 @@ import 'package:chat_app/shared/shared.dart';
 
 import '../../data/repositories/login_repository.dart';
 
-class LoginRepo extends LogInRepository {
+class LoginRepoImpl extends LogInRepo {
   @override
   Future<ResponseModel> signIn(
       {required String email,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,12 +15,33 @@ class AddFriend extends StatefulWidget {
 }
 
 class _AddFriendState extends State<AddFriend> {
-  final TextEditingController _friendGmailETController =
-      TextEditingController();
+  late final TextEditingController _friendGmailETController;
+
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    _friendGmailETController = TextEditingController();
+    super.initState();
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      if (query.trim().isNotEmpty) {
+        context.read<SearchUserBloc>().add(
+              SearchFriendRequestRequired(keyword: query.trim()),
+            );
+      } else {
+        context.read<SearchUserBloc>().add(SearchUserReset());
+      }
+    });
+  }
 
   @override
   void dispose() {
     _friendGmailETController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -41,16 +64,10 @@ class _AddFriendState extends State<AddFriend> {
               InputFormField(
                   hintText: "Search friend with name or email",
                   textEditionController: _friendGmailETController,
-                  onChange: (v) {
-                    if (v.isNotEmpty) {
-                      context
-                          .read<SearchUserBloc>()
-                          .add(SearchFriendRequestRequired(keyword: v));
-                    } else {
-                      context.read<SearchUserBloc>().add(SearchUserReset());
-                    }
-                  }),
-              const SizedBox(height: 10,),
+                  onChange: _onSearchChanged),
+              const SizedBox(
+                height: 10,
+              ),
               Expanded(child: UserSearchResult())
             ],
           ),

@@ -1,18 +1,18 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:chat_app/features/login/data/repositories/login_repository.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../login/domain/repositories/login_repo.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final LoginRepo _loginRepo;
+  final LogInRepo _loginRepo;
 
-  AuthenticationBloc({required LoginRepo loginRepo})
+  AuthenticationBloc({required LogInRepo loginRepo})
       : _loginRepo = loginRepo,
         super(const AuthenticationState.unknown()) {
     on<AppLoggedIn>((event, emit) {

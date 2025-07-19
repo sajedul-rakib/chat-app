@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/apis/model/response_model.dart';
 import 'package:chat_app/common/model/errorModel.dart';
-import 'package:chat_app/features/signup/domain/repositories/signup_repo.dart';
+import 'package:chat_app/features/signup/data/repositories/signup_repository.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../data/models/model.dart';

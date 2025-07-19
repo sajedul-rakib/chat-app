@@ -3,7 +3,7 @@ import 'package:chat_app/apis/api_service.dart';
 import 'package:chat_app/apis/model/response_model.dart';
 import 'package:chat_app/features/profile/data/repositories/profile_repo.dart';
 
-class ProfileRepository extends ProfileRepo {
+class ProfileRepoImpl extends ProfileRepo {
   @override
   Future<ResponseModel> getUserDetail(
       {required String userId, required String token}) async {

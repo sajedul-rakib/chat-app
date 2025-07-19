@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
@@ -75,6 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       context, RouteName.logInScreen);
                 }
                 if (state is SignUpFailure) {
+                  log(state.errorMessage);
                   CustomSnackbar.show(
                       context: context,
                       message: state.errorMessage,

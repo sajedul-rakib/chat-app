@@ -1,19 +1,19 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/common/model/errorModel.dart';
+import 'package:chat_app/features/login/data/repositories/login_repository.dart';
 import 'package:chat_app/services/notification/local_notification.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../domain/repositories/login_repo.dart';
 
 part 'sign_in_event.dart';
 
 part 'sign_in_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  final LoginRepo _loginRepo;
+  final LogInRepo _loginRepo;
 
-  SignInBloc({required LoginRepo loginRepo})
+  SignInBloc({required LogInRepo loginRepo})
       : _loginRepo = loginRepo,
         super(SignInInitial()) {
     //log in handler

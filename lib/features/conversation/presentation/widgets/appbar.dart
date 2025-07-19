@@ -16,7 +16,7 @@ PreferredSizeWidget conversationAppBar(BuildContext context, User user) {
     title: InkWell(
       onTap: () {
         user.profilePic != null && user.profilePic!.isNotEmpty
-            ? showProfilePic('${dotenv.env['BASE_URL']}${user.profilePic!}',
+            ? showProfilePic(user.profilePic!,
                 user.fullName!, user.email!, context)
             : null;
       },
@@ -39,7 +39,7 @@ PreferredSizeWidget conversationAppBar(BuildContext context, User user) {
                     backgroundImage:
                         user.profilePic != null && user.profilePic!.isNotEmpty
                             ? NetworkImage(
-                                '${dotenv.env['BASE_URL']}${user.profilePic!}')
+                                user.profilePic!)
                             : user.gender == 'female'
                                 ? AssetImage('assets/images/female.jpg')
                                 : AssetImage('assets/images/man.jpg')),
