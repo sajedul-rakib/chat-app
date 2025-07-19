@@ -2,6 +2,7 @@ C/C++ Structured Logl
 j
 h/Users/sajedulislamrakib/flutterDev/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	Ä±Ðè2¤ Á·ú®½2€
 ~
 |/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/additional_project_files.txt	Ä±Ðè2 øåü§¾2}
@@ -26,3 +27,29 @@ t
 r/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/prefab_config.json	Ä±Ðè2( „æü§¾2{
 y
 w/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/symbol_folder_index.txt	Ä±Ðè2n „æü§¾2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	‚™ˆö3¤ Á·ú®½2€
+~
+|/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/additional_project_files.txt	‚™ˆö3 øåü§¾2}
+{
+y/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/android_gradle_build.json	‚™ˆö3± üåü§¾2ƒ
+€
+~/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/android_gradle_build_mini.json	‚™ˆö3¢ ‚æü§¾2o
+m
+k/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/build.ninja	‚™ˆö3’Ú ååü§¾2s
+q
+o/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/build.ninja.txt	‚™ˆö3x
+v
+t/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/build_file_index.txt	‚™ˆö3h „æü§¾2y
+w
+u/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/compile_commands.json	‚™ˆö3	}
+{
+y/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/compile_commands.json.bin	‚™ˆö3
+„
+
+/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/metadata_generation_command.txt	‚™ˆö3«	 „æü§¾2v
+t
+r/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/prefab_config.json	ƒ™ˆö3( „æü§¾2{
+y
+w/Users/sajedulislamrakib/flutterDev/projects/chat_app/android/app/.cxx/Debug/7711op3x/arm64-v8a/symbol_folder_index.txt	ƒ™ˆö3n „æü§¾2
+>>>>>>> main

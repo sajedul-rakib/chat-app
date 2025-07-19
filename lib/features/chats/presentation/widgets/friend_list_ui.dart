@@ -24,7 +24,7 @@ class FriendListUi extends StatelessWidget {
         );
       } else if (state is GetFriendListSuccess) {
         return state.friendList.conversation!.isNotEmpty
-            ? ListView.separated(
+            ? ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: state.friendList.conversation!.length,
@@ -62,9 +62,6 @@ class FriendListUi extends StatelessWidget {
                           }),
                     );
                   }
-                },
-                separatorBuilder: (_, int index) {
-                  return const Divider();
                 },
               )
             : NoFriendUi();

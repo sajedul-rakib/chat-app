@@ -1,24 +1,22 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:chat_app/features/login/data/repositories/login_repository.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../login/domain/repositories/login_repo.dart';
 
 part 'authentication_event.dart';
-
 part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final LoginRepo _loginRepo;
-  late final StreamSubscription _userSubscription;
+  final LogInRepo _loginRepo;
 
-  AuthenticationBloc({required LoginRepo loginRepo})
+  AuthenticationBloc({required LogInRepo loginRepo})
       : _loginRepo = loginRepo,
         super(const AuthenticationState.unknown()) {
     on<AppLoggedIn>((event, emit) {
+      log(event.token);
       emit(AuthenticationState.authenticate(event.token));
     });
 
@@ -26,30 +24,14 @@ class AuthenticationBloc
       emit(AuthenticationState.unAuthenticate());
     });
 
-    _userSubscription = _loginRepo.userStream.listen((token) {
-      if (token != null && token.isNotEmpty) {
-        add(AppLoggedIn(token));
+    on<CheckUserLoggedIn>((event, emit) async {
+      log("Check user are logged in or not");
+      String result = await _loginRepo.checkUserLoggedIn();
+      if (result.isNotEmpty) {
+        emit(AuthenticationState.authenticate(result));
       } else {
-        add(AppLogOut());
+        emit(AuthenticationState.unAuthenticate());
       }
     });
-
-    loginRepo.checkUserLoggedIn();
-    // on<AuthenticationUserChanged>((event, emit)async {
-    //   String result=await _loginRepo.checkUserLoggedIn();
-    //   String userId=await SharedData.getLocalSaveItem("userId")?? '';
-    //   if (result.isNotEmpty && userId.isNotEmpty) {
-    //
-    //   } else {
-    //
-    //   }
-    // });
-  }
-
-  @override
-  Future<void> close() {
-    log("close subscripiton");
-    _userSubscription.cancel();
-    return super.close();
   }
 }

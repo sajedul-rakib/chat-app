@@ -1,8 +1,6 @@
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../bloc/get_user_bloc/get_friend_list_bloc.dart';
 import '../widgets/friend_list_ui.dart';
 import '../widgets/story_section.dart';
 
@@ -18,7 +16,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    context.read<GetFriendListBloc>().add(GetFriendListRequested());
     _friendGmailETController = TextEditingController();
     super.initState();
   }
@@ -39,7 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
         alignment: Alignment.topCenter,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

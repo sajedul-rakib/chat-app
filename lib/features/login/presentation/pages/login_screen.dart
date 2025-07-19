@@ -1,5 +1,4 @@
 import 'package:chat_app/features/signup/presentation/widget/text_form_field.dart';
-import 'package:chat_app/features/splash/presentation/bloc/authentication_bloc.dart';
 import 'package:chat_app/features/splash/presentation/widgets/app_button.dart';
 import 'package:chat_app/features/widgets/circular_progress_indicator.dart';
 import 'package:chat_app/features/widgets/custom_snackbar.dart';
@@ -7,6 +6,7 @@ import 'package:chat_app/router/route_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import '../bloc/sign_in_bloc.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -58,9 +58,10 @@ class _LogInScreenState extends State<LogInScreen> {
                   context: context,
                   message: "Log in successful",
                   backgroundColor: Theme.of(context).colorScheme.secondary);
-              context
-                  .read<AuthenticationBloc>()
-                  .add(AppLoggedIn(state.token));
+              //fire the authentication event
+              // context.read<AuthenticationBloc>().add(AppLoggedIn(state.token));
+              Navigator.pushNamedAndRemoveUntil(
+                  context, RouteName.bottomNavBarScreen, (pre) => false);
             } else if (state is SignInFailure) {
               CustomSnackbar.show(
                   context: context,

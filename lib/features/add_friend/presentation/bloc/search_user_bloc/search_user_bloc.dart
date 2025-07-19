@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/common/model/errorModel.dart';
 import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
@@ -19,6 +21,7 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
       : _chatRepo = chatRepo,
         super(SearchUserInitial()) {
     on<SearchFriendRequestRequired>((event, emit) async {
+      log("api called");
       emit(SearchFriendLoading());
       try {
         String token = await SharedData.getLocalSaveItem("token") ?? '';

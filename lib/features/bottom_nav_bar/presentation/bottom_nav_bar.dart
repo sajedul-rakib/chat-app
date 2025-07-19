@@ -1,10 +1,15 @@
+import 'package:chat_app/features/chats/domain/repositories/chat_repo.dart';
 import 'package:chat_app/features/chats/presentation/pages/chat_screen.dart';
+import 'package:chat_app/features/profile/data/repositories/profile_repo.dart';
 import 'package:chat_app/features/profile/presentation/pages/profile_screen.dart';
+import 'package:chat_app/services/locator/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../shared/shared.dart';
+import '../../chats/presentation/bloc/get_user_bloc/get_friend_list_bloc.dart';
 import '../../chats/presentation/bloc/online_user_bloc/online_user_bloc.dart';
+import '../../profile/presentation/bloc/profile_bloc.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -15,6 +20,8 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar>
     with WidgetsBindingObserver {
+  final ChatRepo chatRepo = getIt<ChatRepo>();
+  final ProfileRepo profileRepo = getIt<ProfileRepo>();
   int _currentIndex = 0;
   final List<Widget> _pages = [const ChatScreen(), const ProfileScreen()];
 
@@ -56,26 +63,38 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        elevation: 2,
-        onTap: (index) {
-          _changeIndex(index);
-        },
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(
-              activeIcon: Icon(FontAwesomeIcons.solidCircle),
-              icon: Icon(FontAwesomeIcons.rocketchat),
-              label: 'Chat'),
-          BottomNavigationBarItem(
-              activeIcon: Icon(FontAwesomeIcons.solidCircle),
-              icon: Icon(FontAwesomeIcons.ellipsis),
-              label: 'More'),
-        ],
+    return BlocProvider(
+      create: (context) => OnlineUserBloc()..add(ConnectToSocket()),
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          elevation: 2,
+          onTap: (index) {
+            _changeIndex(index);
+          },
+          showUnselectedLabels: false,
+          items: const [
+            BottomNavigationBarItem(
+                activeIcon: Icon(FontAwesomeIcons.solidCircle),
+                icon: Icon(FontAwesomeIcons.rocketchat),
+                label: 'Chat'),
+            BottomNavigationBarItem(
+                activeIcon: Icon(FontAwesomeIcons.solidCircle),
+                icon: Icon(FontAwesomeIcons.ellipsis),
+                label: 'More'),
+          ],
+        ),
+        body: MultiBlocProvider(providers: [
+          BlocProvider(
+            create: (_) => GetFriendListBloc(chatRepo: chatRepo)
+              ..add(GetFriendListRequested()),
+          ),
+          BlocProvider(
+            create: (_) => ProfileBloc(profileRepo: profileRepo)
+              ..add(GetUserDetailRequired()),
+          ),
+        ], child: _pages[_currentIndex]),
       ),
-      body: _pages[_currentIndex],
     );
   }
 }

@@ -33,7 +33,7 @@ class UserDetailListTile extends StatelessWidget {
                 backgroundImage: state.user.profilePic != null &&
                         state.user.profilePic!.isNotEmpty
                     ? NetworkImage(
-                        '${dotenv.env['BASE_URL']}${state.user.profilePic!}')
+                        state.user.profilePic!)
                     : state.user.gender == 'female'
                         ? AssetImage('assets/images/female.jpg')
                         : AssetImage('assets/images/man.jpg')),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../theme/color_scheme.dart';
 import '../../../signup/presentation/widget/text_form_field.dart';
 import '../../../widgets/custom_snackbar.dart';
 import '../send_bloc/send_bloc.dart';
@@ -72,13 +71,13 @@ class _MessageInputFieldState extends State<MessageInputField> {
               key: _formKey,
               child: InputFormField(
                 onChange: (_) => setState(() {}),
-                filledInput: Theme.of(context).brightness == Brightness.dark
-                    ? true
-                    : false,
+                // filledInput: Theme.of(context).brightness == Brightness.dark
+                //     ? true
+                //     : false,
+                //   Color(0xff0F1828)
                 filledColor: Theme.of(context).brightness == Brightness.dark
-                    ? ColorSchemed.darkColorScheme.primary
-                    : ColorSchemed.lightColorScheme.tertiary
-                        .withValues(alpha: 10),
+                    ?Color(0xff0F1828)
+                    : Color(0xffF7F7FC),
                 hintText: "Message",
                 textEditionController: _textEditingController,
                 prefix: const Icon(CupertinoIcons.mail),

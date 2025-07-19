@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:chat_app/features/chats/data/models/user.dart';
 import 'package:chat_app/features/conversation/datasource/models/message.dart';
+import 'package:chat_app/features/conversation/domain/repositories/message_repo.dart';
 import 'package:chat_app/features/conversation/presentation/bloc/message_bloc.dart';
 import 'package:chat_app/features/conversation/presentation/widgets/appbar.dart';
+import 'package:chat_app/features/widgets/circular_progress_indicator.dart';
+import 'package:chat_app/services/locator/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -32,15 +35,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
   late io.Socket _socket;
   late Message _message;
 
+  final MessageRepo messageRepo = getIt<MessageRepo>();
+
   @override
   void initState() {
     super.initState();
+    _socketConnect();
     context.read<MessageBloc>().add(
           GetMessageRequest(
             conversationId: widget.conversationId,
           ),
         );
-    _socketConnect();
   }
 
   //socket
@@ -110,8 +115,22 @@ class _ConversationScreenState extends State<ConversationScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ShowMessages(
-              loggedUserId: widget.loggedUserId,
+            Expanded(
+              child: BlocBuilder<MessageBloc, MessageState>(
+                  builder: (context, state) {
+                if (state is GetMessageStateSuccess) {
+                  return ShowMessages(
+                    loggedUserId: widget.loggedUserId,
+                    messages: state.messageModel.messages!,
+                  );
+                } else if (state is GetMessageStateLoading) {
+                  return Center(
+                    child: CustomCircularProgressIndicator(),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              }),
             ),
             MessageInputField(
               loggedUserId: widget.loggedUserId,

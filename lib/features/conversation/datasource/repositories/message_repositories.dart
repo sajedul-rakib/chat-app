@@ -5,7 +5,7 @@ import 'package:chat_app/apis/api_service.dart';
 import 'package:chat_app/apis/model/response_model.dart';
 import 'package:chat_app/features/conversation/domain/repositories/message_repo.dart';
 
-class MessageRepositories extends MessageRepo {
+class MessageRepoImpl extends MessageRepo {
   @override
   Future<ResponseModel> getMessage(
       {required String conversationId, required String token}) async {
@@ -18,6 +18,7 @@ class MessageRepositories extends MessageRepo {
     }
   }
 
+  @override
   Future<bool> sendMessage(
       Map<String,dynamic> message, String conversationId, String token) async {
     try {

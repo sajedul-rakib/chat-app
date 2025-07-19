@@ -1,19 +1,22 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/features/conversation/datasource/models/message.dart';
 import 'package:chat_app/features/conversation/datasource/models/message_model.dart';
-import 'package:chat_app/features/conversation/datasource/repositories/message_repositories.dart';
+import 'package:chat_app/features/conversation/domain/repositories/message_repo.dart';
 import 'package:chat_app/shared/shared.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 
 part 'message_event.dart';
+
 part 'message_state.dart';
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
-  final MessageRepositories _messageRepositories;
+  final MessageRepo _messageRepositories;
 
-  MessageBloc({required MessageRepositories messageRepositories})
+  MessageBloc({required MessageRepo messageRepositories})
       : _messageRepositories = messageRepositories,
         super(InitialMessageState()) {
     on<GetMessageRequest>((event, emit) async {
@@ -34,7 +37,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         final updatedMessageModel = MessageModel(
           messages: [
             event.message,
-            ...successState.messageModel.messages ?? []
+            ...successState.messageModel.messages ?? [],
           ],
         );
         emit(GetMessageStateSuccess(messageModel: updatedMessageModel));
